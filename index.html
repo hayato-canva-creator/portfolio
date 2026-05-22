@@ -12,10 +12,10 @@
     .heading-font { font-family: 'Playfair Display', serif; }
     .project-card:hover img { transform: scale(1.05); }
     .project-card img { transition: transform 0.4s ease; }
-    .view-fade { opacity: 1; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); pointer-events: auto; }
-    .view-fade.hidden { opacity: 0; pointer-events: none; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); }
+    .view-fade { opacity: 1; pointer-events: auto; }
+    .view-fade.hidden { display: none; opacity: 0; pointer-events: none; }
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .view-fade.fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1); }
+    .view-fade.fade-in { animation: fadeIn 0.6s cubic-bezier(0.4,0,0.2,1); }
 
     .masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) { .masonry { columns: 3; } }
@@ -228,8 +228,11 @@
     function switchView(hide, show) {
       hide.classList.add('hidden');
       show.classList.remove('hidden');
+      window.scrollTo(0, 0);
+      // 表示してからアニメーションを付与（display:none解除直後に効かせる）
+      void show.offsetWidth;
       show.classList.add('fade-in');
-      setTimeout(function() { show.classList.remove('fade-in'); window.scrollTo(0, 0); }, 1000);
+      setTimeout(function() { show.classList.remove('fade-in'); }, 600);
     }
 
     document.querySelectorAll('.project-card').forEach(function(card) {
