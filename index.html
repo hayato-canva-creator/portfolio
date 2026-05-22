@@ -30,6 +30,22 @@
     .view-fade.fade-in {
       animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
     }
+
+    /* Masonry layout */
+    .masonry {
+      columns: 2;
+      column-gap: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+      .masonry { columns: 3; }
+    }
+    @media (max-width: 639px) {
+      .masonry { columns: 1; }
+    }
+    .masonry > * {
+      break-inside: avoid;
+      margin-bottom: 1.5rem;
+    }
   </style>
 </head>
 <body class="min-h-screen" style="background: rgb(248, 246, 243);">
@@ -57,42 +73,42 @@
 
         <div id="works-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="promotion" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Stack of blank white business cards on pastel surface">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Stack of blank white business cards on pastel surface">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">PROMOTION</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">チラシ</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="medical" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Close-up of hands reviewing report with charts">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Close-up of hands reviewing report with charts">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">MEDICAL</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">患者への指導イラスト</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="infographic" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful infographic with charts and graphs">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful infographic with charts and graphs">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">INFOGRAPHIC</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">ブログ図解</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="presentation" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Business conference presentation">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Business conference presentation">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">PRESENTATION</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">セミナースライド</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="social" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful advertising posters on wall">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful advertising posters on wall">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">SOCIAL</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">SNS画像</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="business" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full object-contain bg-gray-100" src="https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Businessman presenting infographics during a meeting">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Businessman presenting infographics during a meeting">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">BUSINESS</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">事業説明スライド</h3>
@@ -112,7 +128,7 @@
     <div class="max-w-5xl mx-auto px-6 py-10">
       <button id="back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 戻る</button>
       <h2 id="category-title" class="heading-font text-3xl font-bold mb-8" style="color:#1a1a1a;"></h2>
-      <div id="category-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div id="category-gallery" class="masonry"></div>
     </div>
   </div>
 
@@ -127,15 +143,15 @@
 
   <!-- Gallery item template (画像) -->
   <template id="gallery-item-template">
-    <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow bg-gray-100">
-      <img loading="lazy" class="w-full object-contain">
+    <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow">
+      <img loading="lazy" class="w-full block">
     </div>
   </template>
 
   <!-- Collection item template (セミナー/事業のまとまり) -->
   <template id="collection-item-template">
     <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow bg-white">
-      <div class="bg-gray-100"><img loading="lazy" class="w-full object-contain"></div>
+      <img loading="lazy" class="w-full block">
       <div class="p-4">
         <h3 class="collection-title font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 18px;"></h3>
       </div>
