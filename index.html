@@ -376,6 +376,13 @@
     }
 
     lucide.createIcons();
+    // ===== 画像の右クリック・ドラッグ保存を抑止 =====
+    document.addEventListener('contextmenu', function(e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+    document.addEventListener('dragstart', function(e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
   </script>
 </body>
 </html>
