@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hayato — Creative Portfolio</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <style>
+    body { font-family: 'DM Sans', sans-serif; }
+    .heading-font { font-family: 'Playfair Display', serif; }
+    .project-card:hover img { transform: scale(1.05); }
+    .project-card img { transition: transform 0.4s ease; }
+
+    .view-fade {
+      opacity: 1;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: auto;
+    }
+    .view-fade.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .view-fade.fade-in {
+      animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+  </style>
+</head>
+<body class="min-h-screen" style="background: rgb(248, 246, 243);">
+
+  <!-- HOME VIEW -->
+  <div id="home-view" class="view-fade">
+    <header class="w-full">
+      <div class="max-w-5xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10">
+        <!-- ▼ プロフィール写真：ご自身の画像URLに差し替えてください -->
+        <img loading="lazy"
+             class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0"
+             src="https://placehold.co/300x300/9b7c5c/ffffff?text=PHOTO"
+             alt="Portrait">
+        <div>
+          <h1 class="heading-font" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
+          <p class="mt-2" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
+          <p class="mt-4 leading-relaxed" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
+        </div>
+      </div>
+    </header>
+
+    <main class="w-full">
+      <section class="max-w-5xl mx-auto px-6 pb-20">
+        <h2 class="heading-font mb-10" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">Works</h2>
+
+        <div id="works-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="promotion" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Stack of blank white business cards on pastel surface">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">PROMOTION</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">チラシ</h3>
+            </div>
+          </article>
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="medical" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Close-up of hands reviewing report with charts">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">MEDICAL</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">患者への指導イラスト</h3>
+            </div>
+          </article>
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="infographic" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful infographic with charts and graphs">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">INFOGRAPHIC</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">ブログ図解</h3>
+            </div>
+          </article>
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="presentation" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Business conference presentation">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">PRESENTATION</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">セミナースライド</h3>
+            </div>
+          </article>
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="social" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Colorful advertising posters on wall">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">SOCIAL</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">SNS画像</h3>
+            </div>
+          </article>
+          <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="business" style="background: rgb(255, 255, 255);">
+            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Businessman presenting infographics during a meeting">
+            <div class="p-4">
+              <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">BUSINESS</p>
+              <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">事業説明スライド</h3>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <footer class="w-full py-8 text-center">
+      <p class="text-sm" style="color: rgb(138, 138, 138); font-size: 16px;">© 2026 hayato</p>
+    </footer>
+  </div>
+
+  <!-- CATEGORY DETAIL VIEW -->
+  <div id="category-view" class="hidden view-fade">
+    <div class="max-w-5xl mx-auto px-6 py-10">
+      <button id="back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 戻る</button>
+      <h2 id="category-title" class="heading-font text-3xl font-bold mb-8" style="color:#1a1a1a;"></h2>
+      <div id="category-gallery" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </div>
+  </div>
+
+  <!-- Gallery item template -->
+  <template id="gallery-item-template">
+    <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow">
+      <img loading="lazy" class="w-full h-56 object-cover">
+    </div>
+  </template>
+
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
+    <div class="relative w-full h-full flex items-center justify-center p-4">
+      <img id="lightbox-image" loading="lazy" class="max-w-full max-h-[90vh] object-contain">
+      <button id="lightbox-close" class="absolute top-4 right-4 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors" aria-label="閉じる"><i data-lucide="x" style="width: 24px; height: 24px; color: #1a1a1a;"></i></button>
+      <button id="lightbox-prev" class="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors" aria-label="前の画像"><i data-lucide="chevron-left" style="width: 24px; height: 24px; color: #1a1a1a;"></i></button>
+      <button id="lightbox-next" class="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white rounded-full shadow-lg hover:bg-gray-100 transition-colors" aria-label="次の画像"><i data-lucide="chevron-right" style="width: 24px; height: 24px; color: #1a1a1a;"></i></button>
+    </div>
+  </div>
+
+  <script>
+    // ===== カテゴリーごとのギャラリー画像 =====
+    // ▼ ご自身の作品画像URLに差し替えてください（images/ フォルダに置いて 'images/xxx.jpg' のように指定も可）
+    const categoryImages = {
+      promotion: [
+        { src: 'https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Business cards on pastel surface' },
+        { src: 'https://images.pexels.com/photos/6114589/pexels-photo-6114589.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Sale flyer' },
+        { src: 'https://images.pexels.com/photos/29452731/pexels-photo-29452731.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Travel brochures on display' }
+      ],
+      medical: [
+        { src: 'https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Reviewing report' },
+        { src: 'https://images.pexels.com/photos/7578802/pexels-photo-7578802.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Medical professional checking reports' },
+        { src: 'https://images.pexels.com/photos/7578799/pexels-photo-7578799.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Examining medical charts' }
+      ],
+      infographic: [
+        { src: 'https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Infographic with charts' },
+        { src: 'https://images.pexels.com/photos/7948032/pexels-photo-7948032.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Financial charts on desk' },
+        { src: 'https://images.pexels.com/photos/6229/marketing-board-strategy.jpg?auto=compress&cs=tinysrgb&w=800', alt: 'Business strategy board' }
+      ],
+      presentation: [
+        { src: 'https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Conference presentation' },
+        { src: 'https://images.pexels.com/photos/8761336/pexels-photo-8761336.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Seminar with presenter' },
+        { src: 'https://images.pexels.com/photos/9034216/pexels-photo-9034216.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Giving a presentation' }
+      ],
+      social: [
+        { src: 'https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Advertising posters' },
+        { src: 'https://images.pexels.com/photos/5361247/pexels-photo-5361247.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Social media tiles' },
+        { src: 'https://images.pexels.com/photos/15635399/pexels-photo-15635399.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Hashtag campaign notes' }
+      ],
+      business: [
+        { src: 'https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Presenting infographics' },
+        { src: 'https://images.pexels.com/photos/6285074/pexels-photo-6285074.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Discussing data trends' },
+        { src: 'https://images.pexels.com/photos/7693148/pexels-photo-7693148.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Business growth graph' }
+      ]
+    };
+
+    const categoryLabels = {
+      promotion: 'PROMOTION — チラシ',
+      medical: 'MEDICAL — 患者への指導イラスト',
+      infographic: 'INFOGRAPHIC — ブログ図解',
+      presentation: 'PRESENTATION — セミナースライド',
+      social: 'SOCIAL — SNS画像',
+      business: 'BUSINESS — 事業説明スライド'
+    };
+
+    // ===== カテゴリー詳細ビューへ遷移 =====
+    document.querySelectorAll('.project-card').forEach(card => {
+      card.addEventListener('click', () => showCategory(card.dataset.category));
+    });
+
+    document.getElementById('back-btn').addEventListener('click', () => {
+      const categoryView = document.getElementById('category-view');
+      const homeView = document.getElementById('home-view');
+      categoryView.classList.add('hidden');
+      homeView.classList.remove('hidden');
+      homeView.classList.add('fade-in');
+      setTimeout(() => {
+        homeView.classList.remove('fade-in');
+        window.scrollTo(0, 0);
+      }, 1000);
+    });
+
+    function showCategory(cat) {
+      const homeView = document.getElementById('home-view');
+      const categoryView = document.getElementById('category-view');
+      homeView.classList.add('hidden');
+      categoryView.classList.remove('hidden');
+      categoryView.classList.add('fade-in');
+      document.getElementById('category-title').textContent = categoryLabels[cat] || cat;
+
+      const gallery = document.getElementById('category-gallery');
+      gallery.innerHTML = '';
+      const images = categoryImages[cat] || [];
+
+      images.forEach((img, index) => {
+        const template = document.getElementById('gallery-item-template');
+        const clone = template.content.cloneNode(true);
+        const imgEl = clone.querySelector('img');
+        imgEl.src = img.src;
+        imgEl.alt = img.alt;
+        const container = clone.querySelector('div');
+        container.addEventListener('click', () => openLightbox(images, index));
+        gallery.appendChild(clone);
+      });
+
+      setTimeout(() => {
+        categoryView.classList.remove('fade-in');
+        window.scrollTo(0, 0);
+      }, 1000);
+    }
+
+    // ===== ライトボックス =====
+    function openLightbox(images, startIndex) {
+      let currentIndex = startIndex;
+      const lightbox = document.getElementById('lightbox');
+      const lightboxImage = document.getElementById('lightbox-image');
+      const closeBtn = document.getElementById('lightbox-close');
+      const prevBtn = document.getElementById('lightbox-prev');
+      const nextBtn = document.getElementById('lightbox-next');
+
+      function updateImage(index) {
+        lightboxImage.src = images[index].src;
+        lightboxImage.alt = images[index].alt;
+        currentIndex = index;
+      }
+
+      updateImage(currentIndex);
+      lightbox.classList.remove('hidden');
+      lucide.createIcons();
+
+      function onClose() { closeLightbox(); }
+      function onPrev() { updateImage((currentIndex - 1 + images.length) % images.length); }
+      function onNext() { updateImage((currentIndex + 1) % images.length); }
+
+      closeBtn.onclick = onClose;
+      prevBtn.onclick = onPrev;
+      nextBtn.onclick = onNext;
+
+      lightbox.onclick = (e) => { if (e.target === lightbox) closeLightbox(); };
+
+      function handleKeyPress(e) {
+        if (e.key === 'ArrowLeft') onPrev();
+        else if (e.key === 'ArrowRight') onNext();
+        else if (e.key === 'Escape') closeLightbox();
+      }
+      document.addEventListener('keydown', handleKeyPress);
+
+      function closeLightbox() {
+        lightbox.classList.add('hidden');
+        document.removeEventListener('keydown', handleKeyPress);
+      }
+    }
+
+    lucide.createIcons();
+  </script>
+</body>
+</html>
