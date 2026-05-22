@@ -13,39 +13,15 @@
     .project-card:hover img { transform: scale(1.05); }
     .project-card img { transition: transform 0.4s ease; }
 
-    .view-fade {
-      opacity: 1;
-      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
-      pointer-events: auto;
-    }
-    .view-fade.hidden {
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    .view-fade.fade-in {
-      animation: fadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
-    }
+    .view-fade { opacity: 1; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); pointer-events: auto; }
+    .view-fade.hidden { opacity: 0; pointer-events: none; transition: opacity 1s cubic-bezier(0.4,0,0.2,1); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .view-fade.fade-in { animation: fadeIn 1s cubic-bezier(0.4,0,0.2,1); }
 
-    /* Masonry layout */
-    .masonry {
-      columns: 2;
-      column-gap: 1.5rem;
-    }
-    @media (min-width: 1024px) {
-      .masonry { columns: 3; }
-    }
-    @media (max-width: 639px) {
-      .masonry { columns: 1; }
-    }
-    .masonry > * {
-      break-inside: avoid;
-      margin-bottom: 1.5rem;
-    }
+    .masonry { columns: 2; column-gap: 1.5rem; }
+    @media (min-width: 1024px) { .masonry { columns: 3; } }
+    @media (max-width: 639px) { .masonry { columns: 1; } }
+    .masonry > * { break-inside: avoid; margin-bottom: 1.5rem; }
   </style>
 </head>
 <body class="min-h-screen" style="background: rgb(248, 246, 243);">
@@ -54,10 +30,7 @@
   <div id="home-view" class="view-fade">
     <header class="w-full">
       <div class="max-w-5xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10">
-        <img loading="lazy"
-             class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0"
-             src="images/profile.jpg"
-             alt="Portrait">
+        <img loading="lazy" class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0" src="images/profile.jpg" alt="Portrait">
         <div>
           <h1 class="heading-font" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
           <p class="mt-2" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
@@ -69,24 +42,23 @@
     <main class="w-full">
       <section class="max-w-5xl mx-auto px-6 pb-20">
         <h2 class="heading-font mb-10" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">Works</h2>
-
         <div id="works-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="promotion" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800" alt="チラシ">
+            <img loading="lazy" class="w-full h-48 object-cover" src="images/promotion-1.png" alt="チラシ">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">PROMOTION</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">チラシ</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="medical" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800" alt="患者用資料">
+            <img loading="lazy" class="w-full h-48 object-cover" src="images/medical-1.png" alt="患者用資料">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">MEDICAL</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">患者用資料</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="infographic" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800" alt="ブログ図解">
+            <img loading="lazy" class="w-full h-48 object-cover" src="images/infographic-1.png" alt="ブログ図解">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">INFOGRAPHIC</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">ブログ図解</h3>
@@ -100,14 +72,14 @@
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="social" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800" alt="SNS画像">
+            <img loading="lazy" class="w-full h-48 object-cover" src="images/insta-a-1.png" alt="SNS画像">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">SOCIAL</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">SNS画像</h3>
             </div>
           </article>
           <article class="project-card rounded-xl overflow-hidden shadow-md cursor-pointer" data-category="business" style="background: rgb(255, 255, 255);">
-            <img loading="lazy" class="w-full h-48 object-cover" src="https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800" alt="事業説明スライド">
+            <img loading="lazy" class="w-full h-48 object-cover" src="images/business-1.png" alt="事業説明スライド">
             <div class="p-4">
               <p class="text-xs uppercase tracking-wider" style="color: rgb(155, 124, 92); font-size: 16px;">BUSINESS</p>
               <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 19px;">事業説明スライド</h3>
@@ -122,7 +94,7 @@
     </footer>
   </div>
 
-  <!-- LEVEL 2 VIEW : 画像一覧 または コレクション一覧 -->
+  <!-- LEVEL 2 VIEW -->
   <div id="category-view" class="hidden view-fade">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <button id="back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 戻る</button>
@@ -131,7 +103,7 @@
     </div>
   </div>
 
-  <!-- LEVEL 3 VIEW : スライド通し読み -->
+  <!-- LEVEL 3 VIEW -->
   <div id="slides-view" class="hidden view-fade">
     <div class="max-w-3xl mx-auto px-6 py-10">
       <button id="slides-back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 一覧へ戻る</button>
@@ -140,14 +112,12 @@
     </div>
   </div>
 
-  <!-- Gallery item template (画像) -->
   <template id="gallery-item-template">
     <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow">
       <img loading="lazy" class="w-full block">
     </div>
   </template>
 
-  <!-- Collection item template (セミナー/事業のまとまり) -->
   <template id="collection-item-template">
     <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow bg-white">
       <img loading="lazy" class="w-full block">
@@ -157,7 +127,6 @@
     </div>
   </template>
 
-  <!-- Lightbox Modal -->
   <div id="lightbox" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-75">
     <div class="relative w-full h-full flex items-center justify-center p-4">
       <img id="lightbox-image" loading="lazy" class="max-w-full max-h-[90vh] object-contain">
@@ -169,14 +138,18 @@
 
   <script>
     /* =========================================================
-       ここだけ編集すればOK：作品データ
+       作品データ（ここだけ編集すればOK）
+       - categoryImages    : 通常2段（画像一覧→拡大）
+       - categoryCollections: 3段（まとまり一覧→通し読み→拡大）
+       - categoryHubs      : SNS用。2段目でX/Instagramに分岐。
+                             各項目 kind:'gallery' か 'collection'
     ========================================================= */
 
-    // --- 通常カテゴリー（2段構造） ---
     const categoryImages = {
       promotion: [
         { src: 'images/promotion-1.png', alt: 'チラシ作品1' },
-        { src: 'images/promotion-2.png', alt: 'チラシ作品2' },
+        { src: 'images/promotion-2.png', alt: 'チラシ作品2' }
+        { src: 'images/promotion-3.png', alt: 'チラシ作品2' }
       ],
       medical: [
         { src: 'images/medical-1.png', alt: '患者用資料1' },
@@ -194,15 +167,9 @@
         { src: 'images/infographic-8.png', alt: 'ブログ図解8' },
         { src: 'images/infographic-9.png', alt: 'ブログ図解9' },
         { src: 'images/infographic-10.png', alt: 'ブログ図解10' }
-      ],
-      social: [
-        { src: 'https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像1' },
-        { src: 'https://images.pexels.com/photos/5361247/pexels-photo-5361247.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像2' },
-        { src: 'https://images.pexels.com/photos/15635399/pexels-photo-15635399.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像3' }
       ]
     };
 
-    // --- コレクションカテゴリー（3段構造） ---
     const categoryCollections = {
       presentation: [
         {
@@ -213,26 +180,33 @@
             'https://images.pexels.com/photos/9034216/pexels-photo-9034216.jpeg?auto=compress&cs=tinysrgb&w=1000'
           ]
         }
-        // ▼ セミナーを追加するときはここに足す
-        // ,{
-        //   title: '〇〇セミナー',
-        //   slides: [
-        //     'images/seminar-b-1.jpg',
-        //     'images/seminar-b-2.jpg'
-        //   ]
-        // }
+        // ▼ セミナー追加: ,{ title:'〇〇セミナー', slides:['images/seminar-b-1.jpg'] }
       ],
       business: [
         {
           title: '営業資料サンプル',
           slides: [
-            'images/business-1.png',
-            'images/business-2.png',
-            'images/business-3.png',
-            'images/business-4.png',
-            'images/business-5.png',
-            'images/business-6.png',
-            'images/business-7.png'
+            'images/business-1.png','images/business-2.png','images/business-3.png',
+            'images/business-4.png','images/business-5.png','images/business-6.png','images/business-7.png'
+          ]
+        }
+      ]
+    };
+
+    const categoryHubs = {
+      social: [
+        {
+          label: 'X',
+          kind: 'gallery',
+          images: ['images/x-1.png','images/x-2.png','images/x-3.png','images/x-4.png']
+        },
+        {
+          label: 'Instagram',
+          kind: 'collection',
+          posts: [
+            { title: '投稿1', slides: ['images/insta-a-1.png','images/insta-a-2.png','images/insta-a-3.png','images/insta-a-4.png','images/insta-a-5.png','images/insta-a-6.png'] },
+            { title: '投稿2', slides: ['images/insta-b-1.png','images/insta-b-2.png','images/insta-b-3.png','images/insta-b-4.png','images/insta-b-5.png','images/insta-b-6.png'] }
+            // ▼ 投稿追加: ,{ title:'投稿3', slides:['images/insta-c-1.png'] }
           ]
         }
       ]
@@ -247,13 +221,14 @@
       business: 'BUSINESS — 事業説明スライド'
     };
 
-    /* =========================================================
-       ここから下は仕組み（基本さわらなくてOK）
-    ========================================================= */
-
+    /* ========================== 仕組み ========================== */
     const homeView = document.getElementById('home-view');
     const categoryView = document.getElementById('category-view');
     const slidesView = document.getElementById('slides-view');
+
+    // 2段目の戻り先（ホーム or 関数）, 3段目の戻り先（2段目を再描画する関数）
+    var backFromCategory = function() { switchView(categoryView, homeView); };
+    var backFromSlides = function() { switchView(slidesView, categoryView); };
 
     function switchView(hide, show) {
       hide.classList.add('hidden');
@@ -262,69 +237,107 @@
       setTimeout(function() { show.classList.remove('fade-in'); window.scrollTo(0, 0); }, 1000);
     }
 
-    // カードクリック → 2段目へ
     document.querySelectorAll('.project-card').forEach(function(card) {
       card.addEventListener('click', function() { showCategory(card.dataset.category); });
     });
+    document.getElementById('back-btn').addEventListener('click', function() { backFromCategory(); });
+    document.getElementById('slides-back-btn').addEventListener('click', function() { backFromSlides(); });
 
-    // 2段目の戻る → ホームへ
-    document.getElementById('back-btn').addEventListener('click', function() { switchView(categoryView, homeView); });
-    // 3段目の戻る → 2段目へ
-    document.getElementById('slides-back-btn').addEventListener('click', function() { switchView(slidesView, categoryView); });
-
-    function showCategory(cat) {
-      document.getElementById('category-title').textContent = categoryLabels[cat] || cat;
+    // 画像一覧をMasonryで描く
+    function renderGallery(images) {
       var gallery = document.getElementById('category-gallery');
       gallery.innerHTML = '';
+      for (var j = 0; j < images.length; j++) {
+        (function(img, index) {
+          var clone = document.getElementById('gallery-item-template').content.cloneNode(true);
+          var imgEl = clone.querySelector('img');
+          imgEl.src = img.src; imgEl.alt = img.alt;
+          clone.querySelector('div').addEventListener('click', function() { openLightbox(images, index); });
+          gallery.appendChild(clone);
+        })(images[j], j);
+      }
+    }
 
-      if (categoryCollections[cat]) {
-        // コレクション型：セミナー/事業の一覧を表示
-        var collections = categoryCollections[cat];
-        for (var i = 0; i < collections.length; i++) {
-          (function(col) {
-            var template = document.getElementById('collection-item-template');
-            var clone = template.content.cloneNode(true);
-            var imgEl = clone.querySelector('img');
-            imgEl.src = col.slides[0];
-            imgEl.alt = col.title;
-            clone.querySelector('.collection-title').textContent = col.title;
-            clone.querySelector('div').addEventListener('click', function() { showSlides(cat, col); });
-            gallery.appendChild(clone);
-          })(collections[i]);
-        }
+    // まとまり/項目の一覧を描く（title + サムネ + クリック動作）
+    function renderCards(cards) {
+      var gallery = document.getElementById('category-gallery');
+      gallery.innerHTML = '';
+      for (var i = 0; i < cards.length; i++) {
+        (function(card) {
+          var clone = document.getElementById('collection-item-template').content.cloneNode(true);
+          var imgEl = clone.querySelector('img');
+          imgEl.src = card.thumb; imgEl.alt = card.title;
+          clone.querySelector('.collection-title').textContent = card.title;
+          clone.querySelector('div').addEventListener('click', card.onClick);
+          gallery.appendChild(clone);
+        })(cards[i]);
+      }
+    }
+
+    function setTitle(t) { document.getElementById('category-title').textContent = t; }
+
+    function showCategory(cat) {
+      setTitle(categoryLabels[cat] || cat);
+      backFromCategory = function() { switchView(categoryView, homeView); };
+
+      if (categoryHubs[cat]) {
+        // SNS：X / Instagram の一覧
+        var hubItems = categoryHubs[cat];
+        var cards = hubItems.map(function(hub) {
+          var thumb = hub.kind === 'gallery' ? hub.images[0] : hub.posts[0].slides[0];
+          return { title: hub.label, thumb: thumb, onClick: function() { openHub(cat, hub); } };
+        });
+        renderCards(cards);
+      } else if (categoryCollections[cat]) {
+        // セミナー/事業：まとまり一覧
+        var list = categoryCollections[cat];
+        var cards2 = list.map(function(item) {
+          return { title: item.title, thumb: item.slides[0], onClick: function() {
+            backFromSlides = function() { showCategory(cat); switchView(slidesView, categoryView); };
+            showSlides(item);
+          } };
+        });
+        renderCards(cards2);
       } else {
-        // 通常型：画像一覧を表示
-        var images = categoryImages[cat] || [];
-        for (var j = 0; j < images.length; j++) {
-          (function(img, index) {
-            var template = document.getElementById('gallery-item-template');
-            var clone = template.content.cloneNode(true);
-            var imgEl = clone.querySelector('img');
-            imgEl.src = img.src;
-            imgEl.alt = img.alt;
-            clone.querySelector('div').addEventListener('click', function() { openLightbox(images, index); });
-            gallery.appendChild(clone);
-          })(images[j], j);
-        }
+        // 通常：画像一覧
+        renderGallery(categoryImages[cat] || []);
       }
       switchView(homeView, categoryView);
     }
 
-    // 3段目：スライドを縦に並べて通し読み
-    function showSlides(cat, col) {
-      document.getElementById('slides-title').textContent = col.title;
+    // SNSハブ項目を開く
+    function openHub(cat, hub) {
+      setTitle(categoryLabels[cat] + ' — ' + hub.label);
+      // この2段目から戻ると、ハブのトップ（X/Instagram一覧）へ
+      backFromCategory = function() { showCategory(cat); };
+
+      if (hub.kind === 'gallery') {
+        var imgs = hub.images.map(function(src, i) { return { src: src, alt: hub.label + ' ' + (i + 1) }; });
+        renderGallery(imgs);
+      } else {
+        var cards = hub.posts.map(function(post) {
+          return { title: post.title, thumb: post.slides[0], onClick: function() {
+            // 3段目から戻ると、この投稿一覧へ
+            backFromSlides = function() { openHub(cat, hub); switchView(slidesView, categoryView); };
+            showSlides(post);
+          } };
+        });
+        renderCards(cards);
+      }
+      // ハブ項目内（2段目のまま）なので画面遷移はしない
+    }
+
+    // 3段目：縦に通し読み
+    function showSlides(item) {
+      setTitle(item.title);
+      document.getElementById('slides-title').textContent = item.title;
       var stack = document.getElementById('slides-stack');
       stack.innerHTML = '';
-      var imgs = [];
-      for (var i = 0; i < col.slides.length; i++) {
-        imgs.push({ src: col.slides[i], alt: col.title + ' ' + (i + 1) });
-      }
+      var imgs = item.slides.map(function(src, i) { return { src: src, alt: item.title + ' ' + (i + 1) }; });
       for (var j = 0; j < imgs.length; j++) {
         (function(img, index) {
           var el = document.createElement('img');
-          el.loading = 'lazy';
-          el.src = img.src;
-          el.alt = img.alt;
+          el.loading = 'lazy'; el.src = img.src; el.alt = img.alt;
           el.className = 'w-full rounded-xl shadow-md cursor-pointer';
           el.addEventListener('click', function() { openLightbox(imgs, index); });
           stack.appendChild(el);
@@ -333,7 +346,7 @@
       switchView(categoryView, slidesView);
     }
 
-    // ===== ライトボックス =====
+    // ライトボックス
     function openLightbox(images, startIndex) {
       var currentIndex = startIndex;
       var lightbox = document.getElementById('lightbox');
@@ -342,20 +355,10 @@
       var prevBtn = document.getElementById('lightbox-prev');
       var nextBtn = document.getElementById('lightbox-next');
 
-      function updateImage(index) {
-        lightboxImage.src = images[index].src;
-        lightboxImage.alt = images[index].alt;
-        currentIndex = index;
-      }
-
+      function updateImage(index) { lightboxImage.src = images[index].src; lightboxImage.alt = images[index].alt; currentIndex = index; }
       function onPrev() { updateImage((currentIndex - 1 + images.length) % images.length); }
       function onNext() { updateImage((currentIndex + 1) % images.length); }
-
-      function closeLightbox() {
-        lightbox.classList.add('hidden');
-        document.removeEventListener('keydown', handleKeyPress);
-      }
-
+      function closeLightbox() { lightbox.classList.add('hidden'); document.removeEventListener('keydown', handleKeyPress); }
       function handleKeyPress(e) {
         if (e.key === 'ArrowLeft') onPrev();
         else if (e.key === 'ArrowRight') onNext();
@@ -365,7 +368,6 @@
       updateImage(currentIndex);
       lightbox.classList.remove('hidden');
       lucide.createIcons();
-
       closeBtn.onclick = closeLightbox;
       prevBtn.onclick = onPrev;
       nextBtn.onclick = onNext;
