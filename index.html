@@ -38,7 +38,7 @@
   <div id="home-view" class="view-fade">
     <header class="w-full">
       <div class="max-w-5xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10">
-        <!-- ▼ プロフィール写真：ご自身の画像URLに差し替えてください -->
+        <!-- ▼ プロフィール写真 -->
         <img loading="lazy"
              class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0"
              src="images/profile.jpg"
@@ -107,7 +107,7 @@
     </footer>
   </div>
 
-  <!-- CATEGORY DETAIL VIEW -->
+  <!-- LEVEL 2 VIEW : 画像一覧 または コレクション一覧 -->
   <div id="category-view" class="hidden view-fade">
     <div class="max-w-5xl mx-auto px-6 py-10">
       <button id="back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 戻る</button>
@@ -116,10 +116,29 @@
     </div>
   </div>
 
-  <!-- Gallery item template -->
+  <!-- LEVEL 3 VIEW : スライド通し読み -->
+  <div id="slides-view" class="hidden view-fade">
+    <div class="max-w-3xl mx-auto px-6 py-10">
+      <button id="slides-back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 一覧へ戻る</button>
+      <h2 id="slides-title" class="heading-font text-3xl font-bold mb-8" style="color:#1a1a1a;"></h2>
+      <div id="slides-stack" class="flex flex-col gap-6"></div>
+    </div>
+  </div>
+
+  <!-- Gallery item template (画像) -->
   <template id="gallery-item-template">
     <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow">
       <img loading="lazy" class="w-full h-56 object-cover">
+    </div>
+  </template>
+
+  <!-- Collection item template (セミナー/事業のまとまり) -->
+  <template id="collection-item-template">
+    <div class="rounded-xl overflow-hidden shadow-md cursor-pointer hover:shadow-lg transition-shadow bg-white">
+      <img loading="lazy" class="w-full h-56 object-cover">
+      <div class="p-4">
+        <h3 class="collection-title font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 18px;"></h3>
+      </div>
     </div>
   </template>
 
@@ -134,38 +153,71 @@
   </div>
 
   <script>
-    // ===== カテゴリーごとのギャラリー画像 =====
-    // ▼ ご自身の作品画像URLに差し替えてください（images/ フォルダに置いて 'images/xxx.jpg' のように指定も可）
+    /* =========================================================
+       ここだけ編集すればOK：作品データ
+       ---------------------------------------------------------
+       ■ 通常カテゴリー（promotion / medical / infographic / social）
+         → 画像を並べるだけ。クリックで拡大表示。
+       ■ コレクションカテゴリー（presentation / business）
+         → セミナー/事業ごとに { title, slides:[...] } を並べる。
+           一覧のサムネイルは slides の1枚目が自動で使われる。
+           追加するときは { ... } のかたまりを増やすだけ。
+    ========================================================= */
+
+    // --- 通常カテゴリー（2段構造） ---
     const categoryImages = {
       promotion: [
-        { src: 'https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Business cards on pastel surface' },
-        { src: 'https://images.pexels.com/photos/6114589/pexels-photo-6114589.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Sale flyer' },
-        { src: 'https://images.pexels.com/photos/29452731/pexels-photo-29452731.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Travel brochures on display' }
+        { src: 'https://images.pexels.com/photos/5706020/pexels-photo-5706020.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'チラシ作品1' },
+        { src: 'https://images.pexels.com/photos/6114589/pexels-photo-6114589.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'チラシ作品2' },
+        { src: 'https://images.pexels.com/photos/29452731/pexels-photo-29452731.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'チラシ作品3' }
       ],
       medical: [
-        { src: 'https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Reviewing report' },
-        { src: 'https://images.pexels.com/photos/7578802/pexels-photo-7578802.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Medical professional checking reports' },
-        { src: 'https://images.pexels.com/photos/7578799/pexels-photo-7578799.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Examining medical charts' }
+        { src: 'https://images.pexels.com/photos/9034223/pexels-photo-9034223.jpeg?auto=compress&cs=tinysrgb&w=800', alt: '患者指導イラスト1' },
+        { src: 'https://images.pexels.com/photos/7578802/pexels-photo-7578802.jpeg?auto=compress&cs=tinysrgb&w=800', alt: '患者指導イラスト2' },
+        { src: 'https://images.pexels.com/photos/7578799/pexels-photo-7578799.jpeg?auto=compress&cs=tinysrgb&w=800', alt: '患者指導イラスト3' }
       ],
       infographic: [
-        { src: 'https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Infographic with charts' },
-        { src: 'https://images.pexels.com/photos/7948032/pexels-photo-7948032.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Financial charts on desk' },
-        { src: 'https://images.pexels.com/photos/6229/marketing-board-strategy.jpg?auto=compress&cs=tinysrgb&w=800', alt: 'Business strategy board' }
-      ],
-      presentation: [
-        { src: 'https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Conference presentation' },
-        { src: 'https://images.pexels.com/photos/8761336/pexels-photo-8761336.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Seminar with presenter' },
-        { src: 'https://images.pexels.com/photos/9034216/pexels-photo-9034216.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Giving a presentation' }
+        { src: 'https://images.pexels.com/photos/7947654/pexels-photo-7947654.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'ブログ図解1' },
+        { src: 'https://images.pexels.com/photos/7948032/pexels-photo-7948032.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'ブログ図解2' },
+        { src: 'https://images.pexels.com/photos/6229/marketing-board-strategy.jpg?auto=compress&cs=tinysrgb&w=800', alt: 'ブログ図解3' }
       ],
       social: [
-        { src: 'https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Advertising posters' },
-        { src: 'https://images.pexels.com/photos/5361247/pexels-photo-5361247.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Social media tiles' },
-        { src: 'https://images.pexels.com/photos/15635399/pexels-photo-15635399.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Hashtag campaign notes' }
+        { src: 'https://images.pexels.com/photos/3964580/pexels-photo-3964580.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像1' },
+        { src: 'https://images.pexels.com/photos/5361247/pexels-photo-5361247.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像2' },
+        { src: 'https://images.pexels.com/photos/15635399/pexels-photo-15635399.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'SNS画像3' }
+      ]
+    };
+
+    // --- コレクションカテゴリー（3段構造） ---
+    const categoryCollections = {
+      presentation: [
+        {
+          title: 'サンプルセミナー',
+          slides: [
+            'https://images.pexels.com/photos/8761324/pexels-photo-8761324.jpeg?auto=compress&cs=tinysrgb&w=1000',
+            'https://images.pexels.com/photos/8761336/pexels-photo-8761336.jpeg?auto=compress&cs=tinysrgb&w=1000',
+            'https://images.pexels.com/photos/9034216/pexels-photo-9034216.jpeg?auto=compress&cs=tinysrgb&w=1000'
+          ]
+        }
+        // ▼ セミナーを追加するときは、上の } の後にカンマを付けて
+        //   下のかたまりのコメントを外して使ってください
+        // ,{
+        //   title: '〇〇セミナー',
+        //   slides: [
+        //     'images/seminar-b-1.jpg',
+        //     'images/seminar-b-2.jpg'
+        //   ]
+        // }
       ],
       business: [
-        { src: 'https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Presenting infographics' },
-        { src: 'https://images.pexels.com/photos/6285074/pexels-photo-6285074.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Discussing data trends' },
-        { src: 'https://images.pexels.com/photos/7693148/pexels-photo-7693148.jpeg?auto=compress&cs=tinysrgb&w=800', alt: 'Business growth graph' }
+        {
+          title: 'サンプル事業説明',
+          slides: [
+            'https://images.pexels.com/photos/9034728/pexels-photo-9034728.jpeg?auto=compress&cs=tinysrgb&w=1000',
+            'https://images.pexels.com/photos/6285074/pexels-photo-6285074.jpeg?auto=compress&cs=tinysrgb&w=1000',
+            'https://images.pexels.com/photos/7693148/pexels-photo-7693148.jpeg?auto=compress&cs=tinysrgb&w=1000'
+          ]
+        }
       ]
     };
 
@@ -178,50 +230,81 @@
       business: 'BUSINESS — 事業説明スライド'
     };
 
-    // ===== カテゴリー詳細ビューへ遷移 =====
+    /* =========================================================
+       ここから下は仕組み（基本さわらなくてOK）
+    ========================================================= */
+
+    const homeView = document.getElementById('home-view');
+    const categoryView = document.getElementById('category-view');
+    const slidesView = document.getElementById('slides-view');
+
+    function switchView(hide, show) {
+      hide.classList.add('hidden');
+      show.classList.remove('hidden');
+      show.classList.add('fade-in');
+      setTimeout(() => { show.classList.remove('fade-in'); window.scrollTo(0, 0); }, 1000);
+    }
+
+    // カードクリック → 2段目へ
     document.querySelectorAll('.project-card').forEach(card => {
       card.addEventListener('click', () => showCategory(card.dataset.category));
     });
 
-    document.getElementById('back-btn').addEventListener('click', () => {
-      const categoryView = document.getElementById('category-view');
-      const homeView = document.getElementById('home-view');
-      categoryView.classList.add('hidden');
-      homeView.classList.remove('hidden');
-      homeView.classList.add('fade-in');
-      setTimeout(() => {
-        homeView.classList.remove('fade-in');
-        window.scrollTo(0, 0);
-      }, 1000);
-    });
+    // 2段目の戻る → ホームへ
+    document.getElementById('back-btn').addEventListener('click', () => switchView(categoryView, homeView));
+    // 3段目の戻る → 2段目へ
+    document.getElementById('slides-back-btn').addEventListener('click', () => switchView(slidesView, categoryView));
 
     function showCategory(cat) {
-      const homeView = document.getElementById('home-view');
-      const categoryView = document.getElementById('category-view');
-      homeView.classList.add('hidden');
-      categoryView.classList.remove('hidden');
-      categoryView.classList.add('fade-in');
       document.getElementById('category-title').textContent = categoryLabels[cat] || cat;
-
       const gallery = document.getElementById('category-gallery');
       gallery.innerHTML = '';
-      const images = categoryImages[cat] || [];
 
-      images.forEach((img, index) => {
-        const template = document.getElementById('gallery-item-template');
-        const clone = template.content.cloneNode(true);
-        const imgEl = clone.querySelector('img');
-        imgEl.src = img.src;
-        imgEl.alt = img.alt;
-        const container = clone.querySelector('div');
-        container.addEventListener('click', () => openLightbox(images, index));
-        gallery.appendChild(clone);
+      if (categoryCollections[cat]) {
+        // コレクション型：セミナー/事業の一覧を表示
+        const collections = categoryCollections[cat];
+        collections.forEach((col) => {
+          const template = document.getElementById('collection-item-template');
+          const clone = template.content.cloneNode(true);
+          const imgEl = clone.querySelector('img');
+          imgEl.src = col.slides[0];   // 1枚目を自動でサムネイルに
+          imgEl.alt = col.title;
+          clone.querySelector('.collection-title').textContent = col.title;
+          clone.querySelector('div').addEventListener('click', () => showSlides(cat, col));
+          gallery.appendChild(clone);
+        });
+      } else {
+        // 通常型：画像一覧を表示
+        const images = categoryImages[cat] || [];
+        images.forEach((img, index) => {
+          const template = document.getElementById('gallery-item-template');
+          const clone = template.content.cloneNode(true);
+          const imgEl = clone.querySelector('img');
+          imgEl.src = img.src;
+          imgEl.alt = img.alt;
+          clone.querySelector('div').addEventListener('click', () => openLightbox(images, index));
+          gallery.appendChild(clone);
+        });
+      }
+      switchView(homeView, categoryView);
+    }
+
+    // 3段目：スライドを縦に並べて通し読み
+    function showSlides(cat, col) {
+      document.getElementById('slides-title').textContent = col.title;
+      const stack = document.getElementById('slides-stack');
+      stack.innerHTML = '';
+      const imgs = col.slides.map((src, i) => ({ src: src, alt: col.title + ' ' + (i + 1) }));
+      imgs.forEach((img, index) => {
+        const el = document.createElement('img');
+        el.loading = 'lazy';
+        el.src = img.src;
+        el.alt = img.alt;
+        el.className = 'w-full rounded-xl shadow-md cursor-pointer';
+        el.addEventListener('click', () => openLightbox(imgs, index));
+        stack.appendChild(el);
       });
-
-      setTimeout(() => {
-        categoryView.classList.remove('fade-in');
-        window.scrollTo(0, 0);
-      }, 1000);
+      switchView(categoryView, slidesView);
     }
 
     // ===== ライトボックス =====
@@ -243,14 +326,12 @@
       lightbox.classList.remove('hidden');
       lucide.createIcons();
 
-      function onClose() { closeLightbox(); }
       function onPrev() { updateImage((currentIndex - 1 + images.length) % images.length); }
       function onNext() { updateImage((currentIndex + 1) % images.length); }
 
-      closeBtn.onclick = onClose;
+      closeBtn.onclick = closeLightbox;
       prevBtn.onclick = onPrev;
       nextBtn.onclick = onNext;
-
       lightbox.onclick = (e) => { if (e.target === lightbox) closeLightbox(); };
 
       function handleKeyPress(e) {
