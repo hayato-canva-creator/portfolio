@@ -262,7 +262,7 @@
         { src: 'images/infographic-14.png', alt: 'ブログ図解14' },
         { src: 'images/infographic-15.png', alt: 'ブログ図解15' },
         { src: 'images/infographic-16.png', alt: 'ブログ図解16' },
-        { src: 'images/infographic-17.png', alt: 'ブログ図解17' },
+        { src: 'images/infographic-17.png', alt: 'ブログ図解17' }
       ]
     };
 
@@ -468,15 +468,12 @@
       var lbl = categoryLabels[cat] || { en: '', ja: cat };
       setTitle(lbl.en, lbl.ja);
       backFromCategory = function() { switchView(categoryView, homeView); };
+      // ギャラリーのレイアウトクラスをリセット
+      document.getElementById('category-gallery').className = 'masonry';
 
       if (categoryHubs[cat]) {
-        // SNS：X / Instagram の一覧
-        var hubItems = categoryHubs[cat];
-        var cards = hubItems.map(function(hub) {
-          var thumb = hub.kind === 'gallery' ? hub.images[0] : hub.posts[0].slides[0];
-          return { title: hub.label, thumb: thumb, onClick: function() { openHub(cat, hub); } };
-        });
-        renderCards(cards);
+        // SNS：X画像 + Instagram投稿を1画面にまとめて表示
+        renderSocialMixed(cat);
       } else if (categoryCollections[cat]) {
         // セミナー/事業：まとまり一覧
         var list = categoryCollections[cat];
@@ -494,7 +491,59 @@
       switchView(homeView, categoryView);
     }
 
-    // SNSハブ項目を開く
+    // SNS：X画像とInstagram投稿を1画面にまとめて表示
+    function renderSocialMixed(cat) {
+      var gallery = document.getElementById('category-gallery');
+      gallery.innerHTML = '';
+      gallery.className = 'flex flex-wrap gap-6';
+      var hubItems = categoryHubs[cat];
+
+      hubItems.forEach(function(hub) {
+        // セクション小見出し
+        var heading = document.createElement('div');
+        heading.className = 'w-full mb-4';
+        heading.style.cssText = 'break-before: column; column-span: all;';
+        heading.innerHTML = '<p style="font-style: italic; letter-spacing: 0.08em; color: rgb(155,124,92); font-size: 14px; margin-bottom: 4px;">' + hub.label + '</p><hr style="border-color: rgba(155,124,92,0.2); margin-bottom: 16px;">';
+        gallery.appendChild(heading);
+
+        if (hub.kind === 'gallery') {
+          // X画像：そのまま並べる（クリックで拡大）
+          var imgs = hub.images.map(function(src, i) { return { src: src, alt: hub.label + ' ' + (i + 1) }; });
+          for (var j = 0; j < imgs.length; j++) {
+            (function(img, index) {
+              var clone = document.getElementById('gallery-item-template').content.cloneNode(true);
+              var imgEl = clone.querySelector('img');
+              imgEl.src = img.src; imgEl.alt = img.alt;
+              var card = clone.querySelector('div');
+              card.addEventListener('click', function() { openLightbox(imgs, index); });
+              gallery.appendChild(clone);
+              gallery.lastElementChild.classList.add('reveal');
+            })(imgs[j], j);
+          }
+        } else {
+          // Instagram投稿：1枚目をサムネイルとして並べる（クリックで通し読み）
+          hub.posts.forEach(function(post) {
+            var clone = document.getElementById('collection-item-template').content.cloneNode(true);
+            var imgEl = clone.querySelector('img');
+            imgEl.src = post.slides[0]; imgEl.alt = post.title;
+            clone.querySelector('.collection-title').textContent = post.title;
+            clone.querySelector('div').addEventListener('click', function() {
+              backFromSlides = function() {
+                var lbl = categoryLabels[cat] || { en: '', ja: cat };
+                setTitle(lbl.en, lbl.ja);
+                renderSocialMixed(cat);
+                startReveal(document.getElementById('category-gallery'));
+                switchView(slidesView, categoryView);
+              };
+              showSlides(post);
+            });
+            gallery.appendChild(clone);
+          });
+        }
+      });
+    }
+
+    // SNSハブ項目を開く（互換用に残す）
     function openHub(cat, hub) {
       setTitle(categoryLabels[cat].en, hub.label);
       // この2段目から戻ると、ハブのトップ（X/Instagram一覧）へ
