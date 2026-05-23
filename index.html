@@ -486,6 +486,7 @@
       if (hub.kind === 'gallery') {
         var imgs = hub.images.map(function(src, i) { return { src: src, alt: hub.label + ' ' + (i + 1) }; });
         renderGallery(imgs);
+        startReveal(document.getElementById('category-gallery'));
       } else {
         var cards = hub.posts.map(function(post) {
           return { title: post.title, thumb: post.slides[0], onClick: function() {
