@@ -17,13 +17,61 @@
     @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     .view-fade.fade-in { animation: fadeIn 0.6s cubic-bezier(0.4,0,0.2,1); }
 
+    /* タイトル：左からフェードイン */
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-24px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    .title-anim.run { animation: slideInLeft 0.6s cubic-bezier(0.4,0,0.2,1) both; }
+    #category-title-ja.run { animation-delay: 0.12s; }
+
     .masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) { .masonry { columns: 3; } }
     @media (max-width: 639px) { .masonry { columns: 1; } }
     .masonry > * { break-inside: avoid; margin-bottom: 1.5rem; }
+
+    /* スクロールで徐々に表示（下スクロール時のみ） */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.shown { opacity: 1; transform: translateY(0); }
+
+    /* ローディング：プログレスバー */
+    #loader {
+      position: fixed; inset: 0; z-index: 100;
+      background: rgb(248, 246, 243);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 16px;
+      transition: opacity 0.4s ease;
+    }
+    #loader.hide { opacity: 0; pointer-events: none; }
+    #loader-track {
+      width: 200px; height: 3px;
+      background: rgba(155, 124, 92, 0.2);
+      border-radius: 3px; overflow: hidden;
+    }
+    #loader-bar {
+      width: 0%; height: 100%;
+      background: rgb(155, 124, 92);
+      border-radius: 3px;
+    }
+    #loader-bar.run { animation: loadBar 0.8s cubic-bezier(0.4,0,0.2,1) forwards; }
+    @keyframes loadBar {
+      0% { width: 0%; }
+      60% { width: 70%; }
+      100% { width: 100%; }
+    }
+    #loader-label {
+      font-style: italic; letter-spacing: 0.1em;
+      color: rgb(155, 124, 92); font-size: 13px;
+    }
   </style>
 </head>
 <body class="min-h-screen" style="background: rgb(248, 246, 243);">
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div id="loader-track"><div id="loader-bar"></div></div>
+    <p id="loader-label">Loading</p>
+  </div>
 
   <!-- HOME VIEW -->
   <div id="home-view" class="view-fade">
@@ -33,7 +81,7 @@
         <div>
           <h1 class="heading-font" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
           <p class="mt-2" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
-          <p class="mt-4 leading-relaxed" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
+          <p class="mt-4 leading-relaxed" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。<br>医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
         </div>
       </div>
     </header>
@@ -84,8 +132,11 @@
   <!-- LEVEL 2 VIEW -->
   <div id="category-view" class="hidden view-fade">
     <div class="max-w-5xl mx-auto px-6 py-10">
-      <button id="back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 戻る</button>
-      <h2 id="category-title" class="heading-font text-3xl font-bold mb-8" style="color:#1a1a1a;"></h2>
+      <button id="back-btn" class="inline-flex items-center justify-center w-10 h-10 rounded-full mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92);" aria-label="戻る"><i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #fff;"></i></button>
+      <div class="mb-8">
+        <p id="category-title-en" class="title-anim" style="font-style: italic; letter-spacing: 0.08em; color: rgb(155,124,92); font-size: 15px;"></p>
+        <h2 id="category-title-ja" class="heading-font font-bold title-anim" style="color:#1a1a1a; font-size: 30px; line-height: 1.2;"></h2>
+      </div>
       <div id="category-gallery" class="masonry"></div>
     </div>
   </div>
@@ -93,7 +144,7 @@
   <!-- LEVEL 3 VIEW -->
   <div id="slides-view" class="hidden view-fade">
     <div class="max-w-3xl mx-auto px-6 py-10">
-      <button id="slides-back-btn" class="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92); color: rgb(255, 255, 255); font-weight: 500; font-size: 16px;">← 一覧へ戻る</button>
+      <button id="slides-back-btn" class="inline-flex items-center justify-center w-10 h-10 rounded-full mb-8 hover:opacity-80 transition-opacity" style="background: rgb(155, 124, 92);" aria-label="一覧へ戻る"><i data-lucide="arrow-left" style="width: 20px; height: 20px; color: #fff;"></i></button>
       <h2 id="slides-title" class="heading-font text-3xl font-bold mb-8" style="color:#1a1a1a;"></h2>
       <div id="slides-stack" class="flex flex-col gap-6"></div>
     </div>
@@ -135,7 +186,8 @@
     const categoryImages = {
       promotion: [
         { src: 'images/promotion-1.png', alt: 'チラシ作品1' },
-        { src: 'images/promotion-2.png', alt: 'チラシ作品2' }
+        { src: 'images/promotion-2.png', alt: 'チラシ作品2' },
+        { src: 'images/promotion-3.png', alt: 'チラシ作品3' }
       ],
       medical: [
         { src: 'images/medical-1.png', alt: '患者用資料1' },
@@ -208,12 +260,12 @@
     };
 
     const categoryLabels = {
-      promotion: 'PROMOTION — チラシ',
-      medical: 'MEDICAL — 患者用資料',
-      infographic: 'INFOGRAPHIC — ブログ図解',
-      presentation: 'PRESENTATION — セミナースライド',
-      social: 'SOCIAL — SNS画像',
-      business: 'BUSINESS — 事業説明スライド'
+      promotion:    { en: 'PROMOTION',    ja: 'チラシ' },
+      medical:      { en: 'MEDICAL',      ja: '患者用資料' },
+      infographic:  { en: 'INFOGRAPHIC',  ja: 'ブログ図解' },
+      presentation: { en: 'PRESENTATION', ja: 'セミナースライド' },
+      social:       { en: 'SOCIAL',       ja: 'SNS画像' },
+      business:     { en: 'BUSINESS',     ja: '事業説明スライド' }
     };
 
     /* ========================== 仕組み ========================== */
@@ -221,9 +273,45 @@
     const categoryView = document.getElementById('category-view');
     const slidesView = document.getElementById('slides-view');
 
+    // スクロールで徐々に表示（下スクロール時のみ発動、上では何もしない）
+    var lastScrollY = window.scrollY;
+    window.addEventListener('scroll', function() { lastScrollY = window.scrollY; }, { passive: true });
+
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        // 画面内に入った かつ 下方向スクロール中のときだけ表示
+        if (entry.isIntersecting) {
+          entry.target.classList.add('shown');
+          revealObserver.unobserve(entry.target); // 一度表示したら監視解除（上スクロールで消えない）
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+
+    function observeReveal(el) {
+      el.classList.add('reveal');
+      // 画面表示の確定後に監視を開始（display:none中の誤判定を防ぐ）
+      setTimeout(function() { revealObserver.observe(el); }, 50);
+    }
+
     // 2段目の戻り先（ホーム or 関数）, 3段目の戻り先（2段目を再描画する関数）
     var backFromCategory = function() { switchView(categoryView, homeView); };
     var backFromSlides = function() { switchView(slidesView, categoryView); };
+
+    // ===== ローディング（プログレスバー） =====
+    var loader = document.getElementById('loader');
+    var loaderBar = document.getElementById('loader-bar');
+
+    function showLoader(callback) {
+      loader.classList.remove('hide');
+      loaderBar.classList.remove('run');
+      void loaderBar.offsetWidth;
+      loaderBar.classList.add('run');
+      // バーが伸びきったら隠して、続きの処理を実行
+      setTimeout(function() {
+        loader.classList.add('hide');
+        if (callback) callback();
+      }, 800);
+    }
 
     function switchView(hide, show) {
       hide.classList.add('hidden');
@@ -236,7 +324,9 @@
     }
 
     document.querySelectorAll('.project-card').forEach(function(card) {
-      card.addEventListener('click', function() { showCategory(card.dataset.category); });
+      card.addEventListener('click', function() {
+        showLoader(function() { showCategory(card.dataset.category); });
+      });
     });
     document.getElementById('back-btn').addEventListener('click', function() { backFromCategory(); });
     document.getElementById('slides-back-btn').addEventListener('click', function() { backFromSlides(); });
@@ -250,8 +340,10 @@
           var clone = document.getElementById('gallery-item-template').content.cloneNode(true);
           var imgEl = clone.querySelector('img');
           imgEl.src = img.src; imgEl.alt = img.alt;
-          clone.querySelector('div').addEventListener('click', function() { openLightbox(images, index); });
+          var card = clone.querySelector('div');
+          card.addEventListener('click', function() { openLightbox(images, index); });
           gallery.appendChild(clone);
+          observeReveal(gallery.lastElementChild);
         })(images[j], j);
       }
     }
@@ -272,10 +364,22 @@
       }
     }
 
-    function setTitle(t) { document.getElementById('category-title').textContent = t; }
+    function setTitle(en, ja) {
+      var enEl = document.getElementById('category-title-en');
+      var jaEl = document.getElementById('category-title-ja');
+      enEl.textContent = en || '';
+      jaEl.textContent = ja || '';
+      // アニメーションを再発火
+      enEl.classList.remove('run');
+      jaEl.classList.remove('run');
+      void enEl.offsetWidth;
+      enEl.classList.add('run');
+      jaEl.classList.add('run');
+    }
 
     function showCategory(cat) {
-      setTitle(categoryLabels[cat] || cat);
+      var lbl = categoryLabels[cat] || { en: '', ja: cat };
+      setTitle(lbl.en, lbl.ja);
       backFromCategory = function() { switchView(categoryView, homeView); };
 
       if (categoryHubs[cat]) {
@@ -305,7 +409,7 @@
 
     // SNSハブ項目を開く
     function openHub(cat, hub) {
-      setTitle(categoryLabels[cat] + ' — ' + hub.label);
+      setTitle(categoryLabels[cat].en, hub.label);
       // この2段目から戻ると、ハブのトップ（X/Instagram一覧）へ
       backFromCategory = function() { showCategory(cat); };
 
@@ -327,7 +431,6 @@
 
     // 3段目：縦に通し読み
     function showSlides(item) {
-      setTitle(item.title);
       document.getElementById('slides-title').textContent = item.title;
       var stack = document.getElementById('slides-stack');
       stack.innerHTML = '';
@@ -339,6 +442,7 @@
           el.className = 'w-full rounded-xl shadow-md cursor-pointer';
           el.addEventListener('click', function() { openLightbox(imgs, index); });
           stack.appendChild(el);
+          observeReveal(el);
         })(imgs[j], j);
       }
       switchView(categoryView, slidesView);
@@ -374,6 +478,25 @@
     }
 
     lucide.createIcons();
+
+    // ===== 初回読み込み時のローディング =====
+    window.addEventListener('load', function() {
+      loaderBar.classList.add('run');
+      setTimeout(function() { loader.classList.add('hide'); }, 800);
+    });
+    // 万一loadが既に過ぎている場合の保険
+    if (document.readyState === 'complete') {
+      loaderBar.classList.add('run');
+      setTimeout(function() { loader.classList.add('hide'); }, 800);
+    }
+
+    // ===== 画像の右クリック・ドラッグ保存を抑止 =====
+    document.addEventListener('contextmenu', function(e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
+    document.addEventListener('dragstart', function(e) {
+      if (e.target.tagName === 'IMG') e.preventDefault();
+    });
   </script>
 </body>
 </html>
