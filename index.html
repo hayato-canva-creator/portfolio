@@ -25,6 +25,49 @@
     .title-anim.run { animation: slideInLeft 0.6s cubic-bezier(0.4,0,0.2,1) both; }
     #category-title-ja.run { animation-delay: 0.12s; }
 
+    /* ヘッダー：名前・肩書きが左からスライドイン */
+    @keyframes heroSlideIn {
+      from { opacity: 0; transform: translateX(-30px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+    /* ヘッダー：紹介文が下からニョキッと出る */
+    @keyframes heroRiseUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-slide { opacity: 0; }
+    .hero-slide.run { animation: heroSlideIn 0.7s cubic-bezier(0.4,0,0.2,1) forwards; }
+    .hero-rise  { opacity: 0; }
+    .hero-rise.run  { animation: heroRiseUp 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+
+    /* マーキーギャラリー */
+    .marquee-wrap {
+      overflow: hidden;
+      width: 100%;
+      -webkit-mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+      mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent);
+    }
+    .marquee-track {
+      display: flex;
+      gap: 1.5rem;
+      width: max-content;
+      animation: marqueeScroll 30s linear infinite;
+    }
+    .marquee-track:hover { animation-play-state: paused; }
+    @keyframes marqueeScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .marquee-track img {
+      height: 180px;
+      border-radius: 12px;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    @media (max-width: 639px) {
+      .marquee-track img { height: 120px; }
+    }
+
     .masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) { .masonry { columns: 3; } }
     @media (max-width: 639px) { .masonry { columns: 1; } }
@@ -79,14 +122,22 @@
       <div class="max-w-5xl mx-auto px-6 py-16 flex flex-col md:flex-row items-center gap-10">
         <img loading="lazy" class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0" src="images/profile.jpg" alt="Portrait">
         <div>
-          <h1 class="heading-font" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
-          <p class="mt-2" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
-          <p class="mt-4 leading-relaxed" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。<br>医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
+          <h1 id="hero-name" class="heading-font hero-slide" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
+          <p id="hero-tagline" class="mt-2 hero-slide" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
+          <p id="hero-desc" class="mt-4 leading-relaxed hero-rise" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。<br>医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
         </div>
       </div>
     </header>
 
     <main class="w-full">
+      <!-- Gallery：流れるマーキー -->
+      <section class="pb-16">
+        <h2 class="heading-font mb-8 max-w-5xl mx-auto px-6" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">Gallery</h2>
+        <div class="marquee-wrap">
+          <div id="marquee-track" class="marquee-track"></div>
+        </div>
+      </section>
+
       <section class="max-w-5xl mx-auto px-6 pb-20">
         <h2 class="heading-font mb-10" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">Works</h2>
         <div id="works-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10">
@@ -497,15 +548,64 @@
 
     lucide.createIcons();
 
+    // ===== マーキーギャラリー =====
+    (function() {
+      var marqueeImages = [].concat(
+        (categoryImages.medical || []).map(function(o) { return o.src; }),
+        (categoryImages.infographic || []).map(function(o) { return o.src; })
+      );
+      // セミナースライドの実画像も取り込む（サンプルURLは除外）
+      if (categoryCollections.presentation) {
+        categoryCollections.presentation.forEach(function(col) {
+          col.slides.forEach(function(s) {
+            if (s.indexOf('images/') === 0) marqueeImages.push(s);
+          });
+        });
+      }
+      // ランダムに並べ替え（Fisher-Yates）
+      for (var i = marqueeImages.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = marqueeImages[i]; marqueeImages[i] = marqueeImages[j]; marqueeImages[j] = tmp;
+      }
+      // 無限ループ用に2回繰り返す
+      var track = document.getElementById('marquee-track');
+      var allImages = marqueeImages.concat(marqueeImages);
+      allImages.forEach(function(src) {
+        var img = document.createElement('img');
+        img.src = src;
+        img.alt = 'Gallery';
+        img.loading = 'lazy';
+        track.appendChild(img);
+      });
+    })();
+
     // ===== 初回読み込み時のローディング =====
+    function startHeroAnimation() {
+      var name = document.getElementById('hero-name');
+      var tagline = document.getElementById('hero-tagline');
+      var desc = document.getElementById('hero-desc');
+      // 名前：左からスライドイン
+      name.classList.add('run');
+      // 肩書き：少し遅れて左からスライドイン
+      setTimeout(function() { tagline.classList.add('run'); }, 200);
+      // 紹介文：肩書きのアニメが終わった後、下からニョキッ
+      setTimeout(function() { desc.classList.add('run'); }, 900);
+    }
+
     window.addEventListener('load', function() {
       loaderBar.classList.add('run');
-      setTimeout(function() { loader.classList.add('hide'); }, 800);
+      setTimeout(function() {
+        loader.classList.add('hide');
+        startHeroAnimation();
+      }, 800);
     });
     // 万一loadが既に過ぎている場合の保険
     if (document.readyState === 'complete') {
       loaderBar.classList.add('run');
-      setTimeout(function() { loader.classList.add('hide'); }, 800);
+      setTimeout(function() {
+        loader.classList.add('hide');
+        startHeroAnimation();
+      }, 800);
     }
 
     // ===== 画像の右クリック・ドラッグ保存を抑止 =====
