@@ -68,6 +68,35 @@
       .marquee-track img { height: 120px; }
     }
 
+    /* SNS：2〜3カラムグリッド */
+    .social-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (min-width: 1024px) {
+      .social-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .social-grid img { width: 100%; display: block; border-radius: 12px; }
+    /* セクション見出しは全幅 */
+    .social-grid .social-heading { grid-column: 1 / -1; }
+
+    /* 見出しテキスト：左からフェードイン */
+    .social-heading .label {
+      display: inline-block;
+      opacity: 0;
+      font-style: italic; letter-spacing: 0.08em;
+      color: rgb(155,124,92); font-size: 14px; margin-bottom: 6px;
+    }
+    .social-heading.run .label { animation: heroSlideIn 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+    /* 見出しの線：左から右に伸びる */
+    .social-heading .line {
+      height: 1px; background: rgba(155,124,92,0.35);
+      width: 0;
+    }
+    .social-heading.run .line { animation: lineGrow 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s forwards; }
+    @keyframes lineGrow { from { width: 0; } to { width: 100%; } }
+
     .masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) { .masonry { columns: 3; } }
     @media (max-width: 639px) { .masonry { columns: 1; } }
@@ -495,16 +524,17 @@
     function renderSocialMixed(cat) {
       var gallery = document.getElementById('category-gallery');
       gallery.innerHTML = '';
-      gallery.className = 'flex flex-wrap gap-6';
+      gallery.className = 'social-grid';
       var hubItems = categoryHubs[cat];
+      var headings = [];
 
       hubItems.forEach(function(hub) {
-        // セクション小見出し
+        // セクション小見出し（テキスト＋線、アニメーション対象）
         var heading = document.createElement('div');
-        heading.className = 'w-full mb-4';
-        heading.style.cssText = 'break-before: column; column-span: all;';
-        heading.innerHTML = '<p style="font-style: italic; letter-spacing: 0.08em; color: rgb(155,124,92); font-size: 14px; margin-bottom: 4px;">' + hub.label + '</p><hr style="border-color: rgba(155,124,92,0.2); margin-bottom: 16px;">';
+        heading.className = 'social-heading';
+        heading.innerHTML = '<span class="label">' + hub.label + '</span><div class="line"></div>';
         gallery.appendChild(heading);
+        headings.push(heading);
 
         if (hub.kind === 'gallery') {
           // X画像：そのまま並べる（クリックで拡大）
@@ -538,8 +568,18 @@
               showSlides(post);
             });
             gallery.appendChild(clone);
+            gallery.lastElementChild.classList.add('reveal');
           });
         }
+      });
+
+      // 見出しのアニメーションを発火
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          headings.forEach(function(h, i) {
+            setTimeout(function() { h.classList.add('run'); }, i * 250);
+          });
+        });
       });
     }
 
