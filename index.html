@@ -279,18 +279,29 @@
 
     var revealObserver = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
-        // 画面内に入った かつ 下方向スクロール中のときだけ表示
         if (entry.isIntersecting) {
           entry.target.classList.add('shown');
-          revealObserver.unobserve(entry.target); // 一度表示したら監視解除（上スクロールで消えない）
+          revealObserver.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -10% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 0px 0px' });
 
-    function observeReveal(el) {
-      el.classList.add('reveal');
-      // 画面表示の確定後に監視を開始（display:none中の誤判定を防ぐ）
-      setTimeout(function() { revealObserver.observe(el); }, 50);
+    // 表示中のコンテナ内にある .reveal をまとめて監視開始
+    function startReveal(container) {
+      var items = container.querySelectorAll('.reveal');
+      items.forEach(function(el) {
+        if (el.classList.contains('shown')) return;
+        revealObserver.observe(el);
+      });
+      // 保険：1.5秒後に未表示のものは強制表示
+      setTimeout(function() {
+        items.forEach(function(el) {
+          if (!el.classList.contains('shown')) {
+            el.classList.add('shown');
+            revealObserver.unobserve(el);
+          }
+        });
+      }, 1500);
     }
 
     // 2段目の戻り先（ホーム or 関数）, 3段目の戻り先（2段目を再描画する関数）
@@ -321,6 +332,13 @@
       void show.offsetWidth;
       show.classList.add('fade-in');
       setTimeout(function() { show.classList.remove('fade-in'); }, 600);
+      // 表示が確定してからスクロール表示の監視を開始
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          if (show === categoryView) startReveal(document.getElementById('category-gallery'));
+          else if (show === slidesView) startReveal(document.getElementById('slides-stack'));
+        });
+      });
     }
 
     document.querySelectorAll('.project-card').forEach(function(card) {
@@ -343,7 +361,7 @@
           var card = clone.querySelector('div');
           card.addEventListener('click', function() { openLightbox(images, index); });
           gallery.appendChild(clone);
-          observeReveal(gallery.lastElementChild);
+          gallery.lastElementChild.classList.add('reveal');
         })(images[j], j);
       }
     }
@@ -441,8 +459,8 @@
           el.loading = 'lazy'; el.src = img.src; el.alt = img.alt;
           el.className = 'w-full rounded-xl shadow-md cursor-pointer';
           el.addEventListener('click', function() { openLightbox(imgs, index); });
+          el.classList.add('reveal');
           stack.appendChild(el);
-          observeReveal(el);
         })(imgs[j], j);
       }
       switchView(categoryView, slidesView);
