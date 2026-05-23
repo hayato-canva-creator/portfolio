@@ -68,18 +68,17 @@
       .marquee-track img { height: 120px; }
     }
 
-    /* SNS：2〜3カラムグリッド */
-    .social-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
+    /* SNS：セクションごとにmasonryで詰める */
+    .social-section { margin-bottom: 2.5rem; }
+    .social-masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) {
-      .social-grid { grid-template-columns: repeat(3, 1fr); }
+      .social-masonry { columns: 3; }
     }
-    .social-grid img { width: 100%; display: block; border-radius: 12px; }
-    /* セクション見出しは全幅 */
-    .social-grid .social-heading { grid-column: 1 / -1; }
+    @media (max-width: 639px) {
+      .social-masonry { columns: 1; }
+    }
+    .social-masonry > * { break-inside: avoid; margin-bottom: 1.5rem; }
+    .social-masonry img { width: 100%; display: block; border-radius: 12px; }
 
     /* 見出しテキスト：左からフェードイン */
     .social-heading .label {
@@ -92,7 +91,7 @@
     /* 見出しの線：左から右に伸びる */
     .social-heading .line {
       height: 1px; background: rgba(155,124,92,0.35);
-      width: 0;
+      width: 0; margin-bottom: 16px;
     }
     .social-heading.run .line { animation: lineGrow 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s forwards; }
     @keyframes lineGrow { from { width: 0; } to { width: 100%; } }
@@ -524,34 +523,42 @@
     function renderSocialMixed(cat) {
       var gallery = document.getElementById('category-gallery');
       gallery.innerHTML = '';
-      gallery.className = 'social-grid';
+      gallery.className = '';
       var hubItems = categoryHubs[cat];
       var headings = [];
 
       hubItems.forEach(function(hub) {
-        // セクション小見出し（テキスト＋線、アニメーション対象）
+        // セクション枠
+        var section = document.createElement('div');
+        section.className = 'social-section';
+
+        // 見出し（テキスト＋線）
         var heading = document.createElement('div');
         heading.className = 'social-heading';
         heading.innerHTML = '<span class="label">' + hub.label + '</span><div class="line"></div>';
-        gallery.appendChild(heading);
+        section.appendChild(heading);
         headings.push(heading);
 
+        // 画像コンテナ（masonryで比率そのまま詰める）
+        var grid = document.createElement('div');
+        grid.className = 'social-masonry';
+        section.appendChild(grid);
+
         if (hub.kind === 'gallery') {
-          // X画像：そのまま並べる（クリックで拡大）
+          // X画像：比率そのまま、クリックで拡大
           var imgs = hub.images.map(function(src, i) { return { src: src, alt: hub.label + ' ' + (i + 1) }; });
           for (var j = 0; j < imgs.length; j++) {
             (function(img, index) {
               var clone = document.getElementById('gallery-item-template').content.cloneNode(true);
               var imgEl = clone.querySelector('img');
               imgEl.src = img.src; imgEl.alt = img.alt;
-              var card = clone.querySelector('div');
-              card.addEventListener('click', function() { openLightbox(imgs, index); });
-              gallery.appendChild(clone);
-              gallery.lastElementChild.classList.add('reveal');
+              clone.querySelector('div').addEventListener('click', function() { openLightbox(imgs, index); });
+              grid.appendChild(clone);
+              grid.lastElementChild.classList.add('reveal');
             })(imgs[j], j);
           }
         } else {
-          // Instagram投稿：1枚目をサムネイルとして並べる（クリックで通し読み）
+          // Instagram投稿：1枚目をサムネイル、クリックで通し読み
           hub.posts.forEach(function(post) {
             var clone = document.getElementById('collection-item-template').content.cloneNode(true);
             var imgEl = clone.querySelector('img');
@@ -567,10 +574,12 @@
               };
               showSlides(post);
             });
-            gallery.appendChild(clone);
-            gallery.lastElementChild.classList.add('reveal');
+            grid.appendChild(clone);
+            grid.lastElementChild.classList.add('reveal');
           });
         }
+
+        gallery.appendChild(section);
       });
 
       // 見出しのアニメーションを発火
