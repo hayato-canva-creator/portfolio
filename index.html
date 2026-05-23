@@ -96,6 +96,50 @@
     .social-heading.run .line { animation: lineGrow 0.7s cubic-bezier(0.4,0,0.2,1) 0.2s forwards; }
     @keyframes lineGrow { from { width: 0; } to { width: 100%; } }
 
+    /* カテゴリー説明文：じんわりフェードイン */
+    @keyframes softFadeIn { from { opacity: 0; } to { opacity: 1; } }
+    #category-desc {
+      opacity: 0;
+      max-width: 640px;
+      line-height: 1.9;
+      color: rgb(90, 80, 68);
+      font-size: 14px;
+      margin-bottom: 32px;
+    }
+    #category-desc.run { animation: softFadeIn 1.2s ease forwards; animation-delay: 0.3s; }
+
+    /* Works円形アイコンのホバー反応 */
+    .project-card .cat-label { transition: color 0.3s ease; }
+    .project-card:hover .cat-label { color: rgb(120, 90, 60); }
+    .project-card .view-hint {
+      opacity: 0; transform: translateY(-4px);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      font-size: 11px; letter-spacing: 0.1em; color: rgb(155,124,92);
+      margin-top: 4px; height: 14px;
+    }
+    .project-card:hover .view-hint { opacity: 1; transform: translateY(0); }
+
+    /* スクロール進捗バー */
+    #scroll-progress {
+      position: fixed; top: 0; left: 0; height: 3px; width: 0%;
+      background: rgb(155, 124, 92); z-index: 90;
+      transition: width 0.1s linear;
+    }
+
+    /* トップへ戻るボタン */
+    #to-top {
+      position: fixed; bottom: 24px; right: 24px; z-index: 90;
+      width: 44px; height: 44px; border-radius: 9999px;
+      background: rgb(155, 124, 92); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s ease;
+      cursor: pointer; border: none;
+    }
+    #to-top.show { opacity: 1; pointer-events: auto; }
+    #to-top:hover { opacity: 0.85; }
+
     .masonry { columns: 2; column-gap: 1.5rem; }
     @media (min-width: 1024px) { .masonry { columns: 3; } }
     @media (max-width: 639px) { .masonry { columns: 1; } }
@@ -138,6 +182,12 @@
 </head>
 <body class="min-h-screen" style="background: linear-gradient(180deg, rgb(248, 246, 243) 0%, rgb(242, 237, 230) 50%, rgb(248, 246, 243) 100%);">
 
+  <!-- スクロール進捗バー -->
+  <div id="scroll-progress"></div>
+
+  <!-- トップへ戻るボタン -->
+  <button id="to-top" aria-label="トップへ戻る"><i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i></button>
+
   <!-- LOADER -->
   <div id="loader">
     <div id="loader-track"><div id="loader-bar"></div></div>
@@ -171,33 +221,39 @@
         <div id="works-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-8 sm:gap-10">
           <article class="project-card cursor-pointer text-center group" data-category="promotion">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-promotion.png" alt="チラシ">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">PROMOTION</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">PROMOTION</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">チラシ</h3>
+            <p class="view-hint">View →</p>
           </article>
           <article class="project-card cursor-pointer text-center group" data-category="medical">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-medical.png" alt="患者用資料">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">MEDICAL</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">MEDICAL</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">患者用資料</h3>
+            <p class="view-hint">View →</p>
           </article>
           <article class="project-card cursor-pointer text-center group" data-category="infographic">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-infographic.png" alt="ブログ図解">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">INFOGRAPHIC</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">INFOGRAPHIC</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">ブログ図解</h3>
+            <p class="view-hint">View →</p>
           </article>
           <article class="project-card cursor-pointer text-center group" data-category="presentation">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-presentation.png" alt="セミナースライド">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">PRESENTATION</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">PRESENTATION</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">セミナースライド</h3>
+            <p class="view-hint">View →</p>
           </article>
           <article class="project-card cursor-pointer text-center group" data-category="social">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-social.png" alt="SNS画像">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">SOCIAL</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">SOCIAL</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">SNS画像</h3>
+            <p class="view-hint">View →</p>
           </article>
           <article class="project-card cursor-pointer text-center group" data-category="business">
             <img loading="lazy" class="w-32 h-32 sm:w-40 sm:h-40 mx-auto rounded-full object-cover transition-transform" src="images/icon-business.png" alt="事業説明スライド">
-            <p class="mt-4 tracking-wider" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">BUSINESS</p>
+            <p class="mt-4 tracking-wider cat-label" style="font-style: italic; color: rgb(155, 124, 92); font-size: 14px;">BUSINESS</p>
             <h3 class="mt-1 font-medium" style="color: rgb(26, 26, 26); font-weight: 500; font-size: 17px;">事業説明スライド</h3>
+            <p class="view-hint">View →</p>
           </article>
         </div>
       </section>
@@ -216,6 +272,7 @@
         <p id="category-title-en" class="title-anim" style="font-style: italic; letter-spacing: 0.08em; color: rgb(155,124,92); font-size: 15px;"></p>
         <h2 id="category-title-ja" class="heading-font font-bold title-anim" style="color:#1a1a1a; font-size: 30px; line-height: 1.2;"></h2>
       </div>
+      <p id="category-desc"></p>
       <div id="category-gallery" class="masonry"></div>
     </div>
   </div>
@@ -365,6 +422,16 @@
       business:     { en: 'BUSINESS',     ja: '事業説明スライド' }
     };
 
+    // カテゴリーごとの「制作で気をつけていること」
+    const categoryDescriptions = {
+      promotion: '「誰に何を伝えたいか」を最初に整理し、情報の優先順位をはっきりさせることを意識しています。一目で内容が伝わり、行動につながるデザインを心がけています。',
+      medical: '専門用語をできるだけ避け、患者さんやご家族が読んで理解できる平易な表現を大切にしています。理学療法士としての臨床経験を活かし、医学的に正確でありながら、やさしく伝わる資料を目指しています。',
+      infographic: '複雑な情報を整理し、図やイラストで直感的に理解できるようにすることを意識しています。読み手が「なるほど」と感じられる、わかりやすさを第一に考えています。',
+      presentation: '聞き手の理解の流れに沿った構成と、視覚的に伝わるデザインを大切にしています。情報を詰め込みすぎず、要点が伝わるスライドを心がけています。',
+      social: 'スクロールの中で目に留まり、最後まで読みたくなるデザインを意識しています。媒体や読み手の年齢層に合わせたトーンづくりを大切にしています。',
+      business: '伝えたいメッセージが論理的に伝わる構成と、信頼感のあるデザインを心がけています。相手の立場に立って、納得感のある資料づくりを意識しています。'
+    };
+
     /* ========================== 仕組み ========================== */
     const homeView = document.getElementById('home-view');
     const categoryView = document.getElementById('category-view');
@@ -498,6 +565,13 @@
       backFromCategory = function() { switchView(categoryView, homeView); };
       // ギャラリーのレイアウトクラスをリセット
       document.getElementById('category-gallery').className = 'masonry';
+
+      // 説明文をセット＆フェードイン
+      var descEl = document.getElementById('category-desc');
+      descEl.textContent = categoryDescriptions[cat] || '';
+      descEl.classList.remove('run');
+      void descEl.offsetWidth;
+      descEl.classList.add('run');
 
       if (categoryHubs[cat]) {
         // SNS：X画像 + Instagram投稿を1画面にまとめて表示
@@ -665,7 +739,25 @@
 
     lucide.createIcons();
 
-    // ===== マーキーギャラリー =====
+    // ===== スクロール進捗バー & トップへ戻るボタン =====
+    (function() {
+      var progress = document.getElementById('scroll-progress');
+      var toTop = document.getElementById('to-top');
+      function onScroll() {
+        var h = document.documentElement;
+        var scrollTop = h.scrollTop || document.body.scrollTop;
+        var scrollHeight = h.scrollHeight - h.clientHeight;
+        var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        progress.style.width = pct + '%';
+        if (scrollTop > 400) toTop.classList.add('show');
+        else toTop.classList.remove('show');
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+      toTop.addEventListener('click', function() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    })();
     (function() {
       var marqueeImages = [].concat(
         (categoryImages.medical || []).map(function(o) { return o.src; }),
