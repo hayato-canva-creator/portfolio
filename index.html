@@ -253,7 +253,7 @@
     }
     /* 入る：左から右へ画面を覆う（時間差） */
     .trans-block.cover-in {
-      animation: blockCoverIn 0.55s cubic-bezier(0.7,0,0.3,1) forwards;
+      animation: blockCoverIn 0.55s cubic-bezier(0.7,0,0.3,1) both;
     }
     .trans-block:nth-child(1).cover-in { animation-delay: 0s; }
     .trans-block:nth-child(2).cover-in { animation-delay: 0.1s; }
@@ -264,7 +264,7 @@
     }
     /* 出る：そのまま右へ抜けていく（時間差） */
     .trans-block.cover-out {
-      animation: blockCoverOut 0.55s cubic-bezier(0.7,0,0.3,1) forwards;
+      animation: blockCoverOut 0.55s cubic-bezier(0.7,0,0.3,1) both;
     }
     .trans-block:nth-child(1).cover-out { animation-delay: 0s; }
     .trans-block:nth-child(2).cover-out { animation-delay: 0.1s; }
@@ -816,28 +816,43 @@
       transBlocks.forEach(function(b) { b.classList.remove('cover-in', 'cover-out'); });
       void blockTransition.offsetWidth;
 
+      var lastBlock = transBlocks[transBlocks.length - 1]; // 3番目（最後に覆い終わる）
+      var switched = false;
+      var done = false;
+
       // 1) ブロックが左から右へ画面を覆う
       transBlocks.forEach(function(b) { b.classList.add('cover-in'); });
 
-      // 2) 覆い終わったら裏で画面遷移（最後のブロックの遅延0.2s＋0.55s）
-      setTimeout(function() {
-        if (callback) callback();
-      }, 800);
-
-      // 3) そのまま右へ抜けていく
-      setTimeout(function() {
-        transBlocks.forEach(function(b) {
-          b.classList.remove('cover-in');
-          b.classList.add('cover-out');
-        });
-      }, 850);
-
-      // 4) 完全に隠す
-      setTimeout(function() {
+      // 2) 最後のブロックが「覆い終わった」瞬間を検知して次へ
+      function onCoverDone() {
+        lastBlock.removeEventListener('animationend', onCoverDone);
+        // 完全に覆われた状態で裏の画面を切り替え
+        if (!switched) { switched = true; if (callback) callback(); }
+        // 少し静止してから抜ける
+        setTimeout(function() {
+          // cover-in は外さず cover-out を重ねる（CSS順で cover-out が優先され、
+          // 覆った位置→右へ のアニメが隙間なく続く）
+          transBlocks.forEach(function(b) {
+            b.classList.add('cover-out');
+          });
+          // 最後のブロックが抜け終わったら完全に隠す
+          lastBlock.addEventListener('animationend', onOutDone);
+        }, 220);
+      }
+      function onOutDone() {
+        lastBlock.removeEventListener('animationend', onOutDone);
+        if (done) return; done = true;
         blockTransition.classList.remove('active');
         blockTransition.classList.add('gone');
-        transBlocks.forEach(function(b) { b.classList.remove('cover-out'); });
-      }, 1500);
+        transBlocks.forEach(function(b) { b.classList.remove('cover-in', 'cover-out'); });
+      }
+      lastBlock.addEventListener('animationend', onCoverDone);
+
+      // 保険：animationendが取れなかった場合のフォールバック
+      setTimeout(function() {
+        if (!switched) { switched = true; if (callback) callback(); }
+      }, 900);
+      setTimeout(function() { onOutDone(); }, 2200);
     }
 
     // ===== Aboutページの描画 =====
