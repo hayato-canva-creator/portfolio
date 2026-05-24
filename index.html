@@ -167,34 +167,60 @@
     .reveal.shown { opacity: 1; transform: translateY(0); }
 
     /* ローディング：プログレスバー */
+    /* ローダー本体（中央のコンテンツ用） */
     #loader {
-      position: fixed; inset: 0; z-index: 100;
-      background: rgb(248, 246, 243);
+      position: fixed; inset: 0; z-index: 101;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      gap: 16px;
-      transition: opacity 0.4s ease;
+      gap: 14px;
+      pointer-events: none;
     }
-    #loader.hide { opacity: 0; pointer-events: none; }
-    #loader-track {
-      width: 200px; height: 3px;
-      background: rgba(155, 124, 92, 0.2);
-      border-radius: 3px; overflow: hidden;
+    #loader-name {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700; font-size: 34px;
+      color: #ffffff;
+      opacity: 0;
+      letter-spacing: 0.02em;
     }
-    #loader-bar {
-      width: 0%; height: 100%;
-      background: rgb(155, 124, 92);
-      border-radius: 3px;
+    #loader-name.run { animation: loaderNameIn 0.9s cubic-bezier(0.4,0,0.2,1) forwards; }
+    @keyframes loaderNameIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
     }
-    #loader-bar.run { animation: loadBar 0.8s cubic-bezier(0.4,0,0.2,1) forwards; }
-    @keyframes loadBar {
-      0% { width: 0%; }
-      60% { width: 70%; }
-      100% { width: 100%; }
+    /* 終了時：名前が下にスライドして消える */
+    #loader-name.out { animation: loaderNameOut 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+    @keyframes loaderNameOut {
+      from { opacity: 1; transform: translateY(0); }
+      to   { opacity: 0; transform: translateY(40px); }
     }
-    #loader-label {
-      font-style: italic; letter-spacing: 0.1em;
-      color: rgb(155, 124, 92); font-size: 13px;
+    #loader-line {
+      width: 0; height: 2px;
+      background: #ffffff;
     }
+    #loader-line.run { animation: loaderLineGrow 1.1s cubic-bezier(0.4,0,0.2,1) 0.5s forwards; }
+    @keyframes loaderLineGrow {
+      from { width: 0; }
+      to   { width: 200px; }
+    }
+    /* 終了時：線が左から右へ短くなって消える */
+    #loader-line.out { animation: loaderLineShrink 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
+    @keyframes loaderLineShrink {
+      from { width: 200px; margin-left: 0; }
+      to   { width: 0; margin-left: 200px; }
+    }
+
+    /* 扉パネル（左右2枚） */
+    .loader-panel {
+      position: fixed; top: 0; width: 50%; height: 100%;
+      background: #9b7c5c; z-index: 100;
+      transition: transform 0.9s cubic-bezier(0.7,0,0.3,1);
+    }
+    #loader-left  { left: 0; }
+    #loader-right { right: 0; }
+    /* 終了時：左右に開く */
+    #loader-left.open  { transform: translateX(-100%); }
+    #loader-right.open { transform: translateX(100%); }
+    .loader-panel.gone { display: none; }
+    #loader.gone { display: none; }
   </style>
 </head>
 <body class="min-h-screen" style="background: linear-gradient(180deg, rgb(248, 246, 243) 0%, rgb(242, 237, 230) 50%, rgb(248, 246, 243) 100%);">
@@ -206,9 +232,11 @@
   <button id="to-top" aria-label="トップへ戻る"><i data-lucide="arrow-up" style="width: 20px; height: 20px;"></i></button>
 
   <!-- LOADER -->
+  <div id="loader-left" class="loader-panel"></div>
+  <div id="loader-right" class="loader-panel"></div>
   <div id="loader">
-    <div id="loader-track"><div id="loader-bar"></div></div>
-    <p id="loader-label">Loading</p>
+    <p id="loader-name">hayato</p>
+    <div id="loader-line"></div>
   </div>
 
   <!-- HOME VIEW -->
@@ -489,20 +517,56 @@
     var backFromCategory = function() { switchView(categoryView, homeView); };
     var backFromSlides = function() { switchView(slidesView, categoryView); };
 
-    // ===== ローディング（プログレスバー） =====
+    // ===== ローディング =====
     var loader = document.getElementById('loader');
-    var loaderBar = document.getElementById('loader-bar');
+    var loaderName = document.getElementById('loader-name');
+    var loaderLine = document.getElementById('loader-line');
+    var loaderLeft = document.getElementById('loader-left');
+    var loaderRight = document.getElementById('loader-right');
+
+    function runLoaderAnim(text) {
+      // 表示文字を切り替え（ホーム初回は hayato、それ以外は loading）
+      loaderName.textContent = text || 'hayato';
+      // 状態リセット
+      loader.classList.remove('gone');
+      loaderLeft.classList.remove('open', 'gone');
+      loaderRight.classList.remove('open', 'gone');
+      loaderName.classList.remove('run', 'out');
+      loaderLine.classList.remove('run', 'out');
+      void loaderName.offsetWidth;
+      // 名前と線が出る
+      loaderName.classList.add('run');
+      loaderLine.classList.add('run');
+    }
+
+    function closeLoader(callback) {
+      // 名前が下へスライド、線が縮む
+      loaderName.classList.remove('run');
+      loaderLine.classList.remove('run');
+      void loaderName.offsetWidth;
+      loaderName.classList.add('out');
+      loaderLine.classList.add('out');
+      // 少し遅れて扉が左右に開く
+      setTimeout(function() {
+        loaderLeft.classList.add('open');
+        loaderRight.classList.add('open');
+      }, 600);
+      // 扉が開ききったら完全に隠す
+      setTimeout(function() {
+        loader.classList.add('gone');
+        loaderLeft.classList.add('gone');
+        loaderRight.classList.add('gone');
+        if (callback) callback();
+      }, 1600);
+    }
 
     function showLoader(callback) {
-      loader.classList.remove('hide');
-      loaderBar.classList.remove('run');
-      void loaderBar.offsetWidth;
-      loaderBar.classList.add('run');
-      // バーが伸びきったら隠して、続きの処理を実行
+      // カテゴリー移動などは loading 表示
+      runLoaderAnim('loading');
+      // 名前と線の表示が終わったら閉じる演出へ
       setTimeout(function() {
-        loader.classList.add('hide');
-        if (callback) callback();
-      }, 800);
+        closeLoader(callback);
+      }, 1300);
     }
 
     function switchView(hide, show) {
@@ -819,19 +883,17 @@
     }
 
     window.addEventListener('load', function() {
-      loaderBar.classList.add('run');
+      runLoaderAnim('hayato');
       setTimeout(function() {
-        loader.classList.add('hide');
-        startHeroAnimation();
-      }, 800);
+        closeLoader(startHeroAnimation);
+      }, 1300);
     });
     // 万一loadが既に過ぎている場合の保険
     if (document.readyState === 'complete') {
-      loaderBar.classList.add('run');
+      runLoaderAnim('hayato');
       setTimeout(function() {
-        loader.classList.add('hide');
-        startHeroAnimation();
-      }, 800);
+        closeLoader(startHeroAnimation);
+      }, 1300);
     }
 
     // ===== 画像の右クリック・ドラッグ保存を抑止 =====
