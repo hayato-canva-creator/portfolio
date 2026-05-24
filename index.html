@@ -294,8 +294,14 @@
       height: 100%;
       object-fit: cover;
       object-position: center top;
-      -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
-      mask-image: linear-gradient(to right, black 60%, transparent 100%);
+      -webkit-mask-image:
+        linear-gradient(to right, black 55%, transparent 100%),
+        linear-gradient(to bottom, black 80%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image:
+        linear-gradient(to right, black 55%, transparent 100%),
+        linear-gradient(to bottom, black 80%, transparent 100%);
+      mask-composite: intersect;
       will-change: transform;
       transition: transform 0.1s linear;
     }
@@ -1115,8 +1121,8 @@
       var y = window.scrollY || window.pageYOffset;
       var photoImg = document.querySelector('#about-photo img');
       var bgText = document.getElementById('about-bgtext');
-      if (photoImg) photoImg.style.transform = 'translateY(' + (y * 0.12) + 'px) scale(1.05)';
-      if (bgText) bgText.style.transform = 'translateY(calc(-50% + ' + (y * -0.08) + 'px))';
+      if (photoImg) photoImg.style.transform = 'translateY(' + (y * 0.05) + 'px) scale(1.08)';
+      if (bgText) bgText.style.transform = 'translateY(calc(-50% + ' + (y * -0.04) + 'px))';
     }
 
     function showAbout() {
@@ -1128,7 +1134,7 @@
       aboutParallaxActive = true;
       var photoImg0 = document.querySelector('#about-photo img');
       var bgText0 = document.getElementById('about-bgtext');
-      if (photoImg0) photoImg0.style.transform = 'translateY(0) scale(1.05)';
+      if (photoImg0) photoImg0.style.transform = 'translateY(0) scale(1.08)';
       if (bgText0) bgText0.style.transform = 'translateY(-50%)';
       // セクションを時間差でフェードイン
       var sections = aboutView.querySelectorAll('.about-section');
