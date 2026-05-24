@@ -296,11 +296,42 @@
       object-position: center top;
       -webkit-mask-image: linear-gradient(to right, black 60%, transparent 100%);
       mask-image: linear-gradient(to right, black 60%, transparent 100%);
+      will-change: transform;
+      transition: transform 0.1s linear;
+    }
+    /* 背景の薄いABOUT装飾文字 */
+    #about-bgtext {
+      position: fixed;
+      top: 50%; right: -2%;
+      transform: translateY(-50%);
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      font-size: 22vw;
+      line-height: 1;
+      color: rgba(155, 124, 92, 0.05);
+      letter-spacing: -0.02em;
+      z-index: 0;
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+      will-change: transform;
     }
     /* 写真の上に、文字側へなじませる薄いベール */
     #about-content {
       position: relative;
       z-index: 2;
+    }
+    /* 見出しの一文字ずつフェードイン */
+    .about-char {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(0.4em);
+    }
+    .about-char.run {
+      animation: aboutCharIn 0.5s cubic-bezier(0.2,0.7,0.3,1) forwards;
+    }
+    @keyframes aboutCharIn {
+      to { opacity: 1; transform: translateY(0); }
     }
     /* 写真と重なる左カラム分の余白（テキストは右寄せ気味に） */
     #about-content .about-inner {
@@ -322,6 +353,11 @@
       #about-content .about-inner {
         margin-left: 0;
         padding: 24px 24px 60px 24px;
+      }
+      #about-bgtext {
+        top: auto; bottom: 8%;
+        right: -5%;
+        font-size: 38vw;
       }
     }
     /* できること：アイコン＋ラベルのグリッド */
@@ -583,6 +619,8 @@
 
   <!-- ABOUT VIEW -->
   <div id="about-view" class="hidden view-fade">
+    <!-- 背景の薄い装飾文字 -->
+    <div id="about-bgtext" aria-hidden="true">ABOUT</div>
     <!-- 左に固定する大きな写真 -->
     <div id="about-photo">
       <img loading="lazy" src="images/about-photo.jpg" alt="hayato portrait">
@@ -595,7 +633,7 @@
         <!-- イントロ -->
         <section class="about-section mb-16">
           <p style="font-style: italic; letter-spacing: 0.08em; color: rgb(155,124,92); font-size: 15px;">ABOUT</p>
-          <h2 class="heading-font font-bold mt-1 mb-3" style="color:#1a1a1a; font-size: 36px;">hayato</h2>
+          <h2 id="about-name" class="heading-font font-bold mt-1 mb-3" style="color:#1a1a1a; font-size: 36px;">hayato</h2>
           <p class="mb-6" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 17px;">Physical Therapist &amp; Designer</p>
           <p class="leading-relaxed" style="color: rgb(74, 74, 74); font-size: 15px; line-height: 1.9;">理学療法士として医療・健康の現場に携わりながら、Canvaを用いたデザイン制作を行っています。臨床で培った「相手に分かりやすく伝える」視点を強みに、チラシ・図解・スライド・SNS画像まで幅広く手がけています。専門知識を持つからこそ届けられる、正確で"伝わる"デザインを大切にしています。</p>
         </section>
@@ -1045,10 +1083,53 @@
       });
     }
 
+    // 見出しを一文字ずつ <span> に分割
+    var nameSplit = false;
+    function splitAboutName() {
+      var el = document.getElementById('about-name');
+      if (!el || nameSplit) return;
+      var text = el.textContent;
+      el.textContent = '';
+      text.split('').forEach(function(ch) {
+        var span = document.createElement('span');
+        span.className = 'about-char';
+        span.textContent = ch;
+        el.appendChild(span);
+      });
+      nameSplit = true;
+    }
+    function runNameAnim() {
+      var chars = document.querySelectorAll('#about-name .about-char');
+      chars.forEach(function(c, i) {
+        c.classList.remove('run');
+        void c.offsetWidth;
+        c.style.animationDelay = (i * 0.06) + 's';
+        c.classList.add('run');
+      });
+    }
+
+    // パララックス（写真と背景文字をスクロールでゆっくり動かす）
+    var aboutParallaxActive = false;
+    function onAboutScroll() {
+      if (!aboutParallaxActive) return;
+      var y = window.scrollY || window.pageYOffset;
+      var photoImg = document.querySelector('#about-photo img');
+      var bgText = document.getElementById('about-bgtext');
+      if (photoImg) photoImg.style.transform = 'translateY(' + (y * 0.12) + 'px) scale(1.05)';
+      if (bgText) bgText.style.transform = 'translateY(calc(-50% + ' + (y * -0.08) + 'px))';
+    }
+
     function showAbout() {
       if (!aboutBuilt) buildAbout();
+      splitAboutName();
       switchView(homeView, aboutView);
       if (window.lucide) lucide.createIcons();
+      // パララックス有効化＋初期位置リセット
+      aboutParallaxActive = true;
+      var photoImg0 = document.querySelector('#about-photo img');
+      var bgText0 = document.getElementById('about-bgtext');
+      if (photoImg0) photoImg0.style.transform = 'translateY(0) scale(1.05)';
+      if (bgText0) bgText0.style.transform = 'translateY(-50%)';
       // セクションを時間差でフェードイン
       var sections = aboutView.querySelectorAll('.about-section');
       sections.forEach(function(sec) { sec.classList.remove('run'); });
@@ -1064,6 +1145,8 @@
 
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
+          // 見出しの一文字ずつフェードイン
+          runNameAnim();
           sections.forEach(function(sec, i) {
             setTimeout(function() { sec.classList.add('run'); }, i * 150);
           });
@@ -1120,8 +1203,22 @@
     });
     // Aboutから戻る（同じブロック遷移でホームへ）
     document.getElementById('about-back-btn').addEventListener('click', function() {
+      aboutParallaxActive = false;
       blockSlideTransition(function() { switchView(aboutView, homeView); });
     });
+
+    // パララックス用スクロール監視（軽量化のためrAFでスロットル）
+    var aboutScrollTicking = false;
+    window.addEventListener('scroll', function() {
+      if (!aboutParallaxActive) return;
+      if (!aboutScrollTicking) {
+        window.requestAnimationFrame(function() {
+          onAboutScroll();
+          aboutScrollTicking = false;
+        });
+        aboutScrollTicking = true;
+      }
+    }, { passive: true });
 
     // 画像一覧をMasonryで描く
     function renderGallery(images) {
