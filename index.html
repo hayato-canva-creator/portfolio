@@ -25,6 +25,21 @@
     .title-anim.run { animation: slideInLeft 0.6s cubic-bezier(0.4,0,0.2,1) both; }
     #category-title-ja.run { animation-delay: 0.12s; }
 
+    /* カテゴリータイトルのマーカーハイライト（文字の下1/3に重なる） */
+    .title-marker {
+      background-image: linear-gradient(rgba(155,124,92,0.30), rgba(155,124,92,0.30));
+      background-repeat: no-repeat;
+      background-position: 0 100%;
+      background-size: 0% 33%;
+    }
+    .title-marker.run {
+      animation: titleMarkerGrow 0.8s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes titleMarkerGrow {
+      from { background-size: 0% 33%; }
+      to   { background-size: 100% 33%; }
+    }
+
     /* ヘッダー：名前・肩書きが左からスライドイン */
     @keyframes heroSlideIn {
       from { opacity: 0; transform: translateX(-30px); }
@@ -546,7 +561,11 @@
       void loaderName.offsetWidth;
       loaderName.classList.add('out');
       loaderLine.classList.add('out');
-      // 少し遅れて扉が左右に開く
+      // 扉が閉じている（茶色で隠れている）間に、裏で画面遷移を済ませる
+      setTimeout(function() {
+        if (callback) callback();
+      }, 580);
+      // その直後に扉が左右に開く（このとき目的のページは表示済み）
       setTimeout(function() {
         loaderLeft.classList.add('open');
         loaderRight.classList.add('open');
@@ -556,7 +575,6 @@
         loader.classList.add('gone');
         loaderLeft.classList.add('gone');
         loaderRight.classList.add('gone');
-        if (callback) callback();
       }, 1600);
     }
 
@@ -631,13 +649,17 @@
       var enEl = document.getElementById('category-title-en');
       var jaEl = document.getElementById('category-title-ja');
       enEl.textContent = en || '';
-      jaEl.textContent = ja || '';
-      // アニメーションを再発火
+      // 日本語タイトルはマーカー用のspanで包む
+      jaEl.innerHTML = '<span class="title-marker">' + (ja || '') + '</span>';
+      var marker = jaEl.querySelector('.title-marker');
+      // タイトル本体のスライドインを再発火
       enEl.classList.remove('run');
       jaEl.classList.remove('run');
       void enEl.offsetWidth;
       enEl.classList.add('run');
       jaEl.classList.add('run');
+      // タイトルと説明文が出たあとのタイミングでマーカーを引く
+      setTimeout(function() { if (marker) marker.classList.add('run'); }, 1100);
     }
 
     function showCategory(cat) {
