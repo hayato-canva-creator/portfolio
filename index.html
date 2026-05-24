@@ -324,31 +324,123 @@
         padding: 24px 24px 60px 24px;
       }
     }
-    .about-skill-bar-track {
-      height: 8px; border-radius: 9999px;
-      background: rgba(155,124,92,0.18);
+    /* できること：アイコン＋ラベルのグリッド */
+    .about-skills-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+    }
+    @media (max-width: 600px) {
+      .about-skills-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    .about-skill-cell {
+      display: flex; flex-direction: column; align-items: center; text-align: center;
+      gap: 10px;
+      padding: 18px 8px;
+      border-radius: 16px;
+      background: rgba(155,124,92,0.07);
+      transition: transform 0.3s ease, background 0.3s ease;
+    }
+    .about-skill-cell:hover { transform: translateY(-3px); background: rgba(155,124,92,0.13); }
+    .about-skill-icon {
+      width: 56px; height: 56px; border-radius: 9999px;
+      display: flex; align-items: center; justify-content: center;
+      background: #fff;
+      box-shadow: 0 2px 8px rgba(155,124,92,0.18);
       overflow: hidden;
     }
-    .about-skill-bar-fill {
-      height: 100%; border-radius: 9999px;
-      background: rgb(155,124,92);
-      width: 0;
+    .about-skill-icon img { width: 100%; height: 100%; object-fit: cover; }
+    .about-skill-label { font-size: 12.5px; color: #1a1a1a; font-weight: 500; line-height: 1.4; }
+
+    /* 制作で大切にしていること：アイコン大きめカード */
+    .about-value-card {
+      display: flex; gap: 20px; align-items: center;
+      padding: 22px 24px;
+      border-radius: 18px;
+      background: rgba(155,124,92,0.08);
     }
-    .about-skill-bar-fill.run {
-      transition: width 1.1s cubic-bezier(0.4,0,0.2,1);
+    .about-value-icon {
+      flex-shrink: 0;
+      width: 64px; height: 64px; border-radius: 18px;
+      display: flex; align-items: center; justify-content: center;
+      background: rgb(155,124,92);
+      overflow: hidden;
+    }
+    .about-value-icon i { width: 34px; height: 34px; color: #fff; }
+    .about-value-icon img { width: 100%; height: 100%; object-fit: cover; }
+
+    /* タイムライン */
+    #about-timeline { position: relative; }
+    /* 上から下へ伸びる1本線 */
+    .about-timeline-line {
+      position: absolute;
+      left: 0; top: 4px; bottom: 4px;
+      width: 2px;
+      background: rgba(155,124,92,0.3);
+      transform: scaleY(0);
+      transform-origin: top center;
+    }
+    .about-timeline-line.run {
+      animation: timelineLineGrow 1.2s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes timelineLineGrow {
+      from { transform: scaleY(0); }
+      to   { transform: scaleY(1); }
     }
     .about-timeline-item {
       position: relative;
       padding-left: 28px;
       padding-bottom: 28px;
-      border-left: 2px solid rgba(155,124,92,0.3);
     }
-    .about-timeline-item:last-child { border-left-color: transparent; padding-bottom: 0; }
-    .about-timeline-item::before {
-      content: ''; position: absolute; left: -7px; top: 2px;
+    .about-timeline-item:last-child { padding-bottom: 0; }
+    /* 丸（順番にポンと出る） */
+    .about-timeline-dot {
+      position: absolute; left: -7px; top: 2px;
       width: 12px; height: 12px; border-radius: 9999px;
       background: rgb(155,124,92);
+      transform: scale(0);
     }
+    .about-timeline-dot.run {
+      animation: timelineDotPop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    @keyframes timelineDotPop {
+      from { transform: scale(0); }
+      to   { transform: scale(1); }
+    }
+    /* 現在（兼業）の強調 */
+    .about-timeline-item.highlight {
+      background: rgba(155,124,92,0.08);
+      border-radius: 0 16px 16px 0;
+      padding: 16px 20px 4px 28px;
+    }
+    .about-timeline-item.highlight .about-timeline-dot {
+      width: 16px; height: 16px; left: -9px; top: 18px;
+      box-shadow: 0 0 0 4px rgba(155,124,92,0.2);
+    }
+
+    /* 制作実績数 */
+    .about-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .about-stat-cell {
+      text-align: center;
+      padding: 24px 12px;
+      border-radius: 18px;
+      background: rgba(155,124,92,0.08);
+    }
+    .about-stat-num {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: rgb(155,124,92);
+      line-height: 1;
+      display: flex; align-items: baseline; justify-content: center; gap: 2px;
+    }
+    .about-stat-count { font-size: 40px; }
+    .about-stat-suffix { font-size: 22px; }
+    .about-stat-label { margin-top: 8px; font-size: 13px; color: rgb(90,80,68); font-weight: 500; }
+
     .profile-clickable { cursor: pointer; position: relative; }
     .profile-clickable::after {
       content: 'About →';
@@ -500,29 +592,29 @@
         <!-- できること -->
         <section class="about-section mb-16">
           <h3 class="heading-font font-bold mb-6" style="color:#1a1a1a; font-size: 24px;">できること</h3>
-          <div id="about-skills" class="space-y-5"></div>
+          <div id="about-skills" class="about-skills-grid"></div>
         </section>
 
         <!-- 制作で大切にしていること -->
         <section class="about-section mb-16">
           <h3 class="heading-font font-bold mb-6" style="color:#1a1a1a; font-size: 24px;">制作で大切にしていること</h3>
           <div class="grid grid-cols-1 gap-4">
-            <div class="p-5 rounded-2xl flex gap-4 items-start" style="background: rgba(155,124,92,0.08);">
-              <div class="flex-shrink-0"><i data-lucide="target" style="width:26px;height:26px;color:rgb(155,124,92);"></i></div>
+            <div class="about-value-card">
+              <div class="about-value-icon"><img loading="lazy" src="images/About-icon1.png" alt=""></div>
               <div>
                 <h4 class="font-medium mb-1" style="color:#1a1a1a; font-size:16px;">伝える相手を考える</h4>
                 <p style="color: rgb(90,80,68); font-size:13px; line-height:1.8;">「誰に何を届けるか」を起点に、情報の優先順位を整理してから手を動かします。</p>
               </div>
             </div>
-            <div class="p-5 rounded-2xl flex gap-4 items-start" style="background: rgba(155,124,92,0.08);">
-              <div class="flex-shrink-0"><i data-lucide="heart-pulse" style="width:26px;height:26px;color:rgb(155,124,92);"></i></div>
+            <div class="about-value-card">
+              <div class="about-value-icon"><img loading="lazy" src="images/About-icon2.png" alt=""></div>
               <div>
                 <h4 class="font-medium mb-1" style="color:#1a1a1a; font-size:16px;">専門性に裏打ちされた正確さ</h4>
                 <p style="color: rgb(90,80,68); font-size:13px; line-height:1.8;">医学的に正確でありながら、専門外の人にもやさしく伝わる表現を追求します。</p>
               </div>
             </div>
-            <div class="p-5 rounded-2xl flex gap-4 items-start" style="background: rgba(155,124,92,0.08);">
-              <div class="flex-shrink-0"><i data-lucide="eye" style="width:26px;height:26px;color:rgb(155,124,92);"></i></div>
+            <div class="about-value-card">
+              <div class="about-value-icon"><img loading="lazy" src="images/About-icon3.png" alt=""></div>
               <div>
                 <h4 class="font-medium mb-1" style="color:#1a1a1a; font-size:16px;">一目で伝わるデザイン</h4>
                 <p style="color: rgb(90,80,68); font-size:13px; line-height:1.8;">情報を詰め込みすぎず、見た瞬間に内容が掴めるシンプルさを心がけています。</p>
@@ -537,10 +629,10 @@
           <div id="about-timeline"></div>
         </section>
 
-        <!-- 使用ツール -->
+        <!-- 制作実績数 -->
         <section class="about-section mb-8">
-          <h3 class="heading-font font-bold mb-6" style="color:#1a1a1a; font-size: 24px;">使用ツール</h3>
-          <div id="about-tools" class="flex flex-wrap gap-3"></div>
+          <h3 class="heading-font font-bold mb-6" style="color:#1a1a1a; font-size: 24px;">制作実績</h3>
+          <div id="about-stats" class="about-stats-grid"></div>
         </section>
       </div>
     </div>
@@ -693,21 +785,27 @@
     };
 
     // ===== Aboutページのデータ（ここを編集すればOK） =====
+    // できること：5項目（用意済みアイコン画像＋ラベル）
     const aboutSkills = [
-      { label: 'チラシ・ポスター制作', level: 90 },
-      { label: '医療・健康系の図解／インフォグラフィック', level: 95 },
-      { label: 'セミナー・プレゼンスライド', level: 88 },
-      { label: 'SNS画像（X / Instagram）', level: 85 },
-      { label: '事業・営業資料', level: 80 }
+      { img: 'images/icon-promotion.png',    label: 'チラシ' },
+      { img: 'images/icon-medical.png',      label: '医療系図解' },
+      { img: 'images/icon-presentation.png', label: 'セミナースライド' },
+      { img: 'images/icon-social.png',       label: 'SNS画像' },
+      { img: 'images/icon-business.png',     label: '事業資料' }
     ];
 
     const aboutTimeline = [
       { year: '臨床現場', title: '理学療法士として勤務', desc: '医療・健康分野で患者さんやご家族と向き合い、「分かりやすく伝える」ことの大切さを学ぶ。' },
       { year: '制作のはじまり', title: 'Canvaでの資料づくりを開始', desc: '院内資料や患者向け説明資料の作成を通じて、デザインで情報が伝わる手応えを実感。' },
-      { year: '現在', title: 'デザイナーとして活動', desc: 'チラシ・図解・スライド・SNS画像まで、医療の専門知識を活かした制作を幅広く手がける。' }
+      { year: '現在', title: '理学療法士 × デザイナーの二刀流', desc: '理学療法士の仕事を続けながら、兼業デザイナーとして活動。臨床で培った専門知識を強みに、チラシ・図解・スライド・SNS画像まで幅広く制作を手がけている。', highlight: true }
     ];
 
-    const aboutTools = ['Canva', 'Illustrator', 'Photoshop', 'PowerPoint', 'Figma'];
+    // 制作実績数（数字はあとで差し替え可能）
+    const aboutStats = [
+      { num: '900', suffix: '+枚', label: '制作点数' },
+      { num: '6',   suffix: '種', label: '対応ジャンル' },
+      { num: '6',   suffix: '年', label: '制作歴' }
+    ];
 
     /* ========================== 仕組み ========================== */
     const homeView = document.getElementById('home-view');
@@ -858,44 +956,82 @@
     // ===== Aboutページの描画 =====
     var aboutBuilt = false;
     function buildAbout() {
-      // スキルバー
+      // できること：アイコン画像＋ラベルを横並び
       var skillsWrap = document.getElementById('about-skills');
       skillsWrap.innerHTML = '';
       aboutSkills.forEach(function(s) {
-        var row = document.createElement('div');
-        row.innerHTML =
-          '<div class="flex justify-between items-baseline mb-2">' +
-            '<span style="color:#1a1a1a; font-size:14px; font-weight:500;">' + s.label + '</span>' +
-            '<span style="color:rgb(155,124,92); font-size:13px;">' + s.level + '%</span>' +
-          '</div>' +
-          '<div class="about-skill-bar-track"><div class="about-skill-bar-fill" data-level="' + s.level + '"></div></div>';
-        skillsWrap.appendChild(row);
+        var cell = document.createElement('div');
+        cell.className = 'about-skill-cell';
+        cell.innerHTML =
+          '<div class="about-skill-icon"><img loading="lazy" src="' + s.img + '" alt="' + s.label + '"></div>' +
+          '<span class="about-skill-label">' + s.label + '</span>';
+        skillsWrap.appendChild(cell);
       });
 
       // タイムライン
       var tl = document.getElementById('about-timeline');
       tl.innerHTML = '';
+      // 上から下へ伸びる線（1本）
+      var line = document.createElement('div');
+      line.className = 'about-timeline-line';
+      tl.appendChild(line);
       aboutTimeline.forEach(function(t) {
         var item = document.createElement('div');
-        item.className = 'about-timeline-item';
+        item.className = 'about-timeline-item' + (t.highlight ? ' highlight' : '');
         item.innerHTML =
+          '<span class="about-timeline-dot"></span>' +
           '<p style="color:rgb(155,124,92); font-size:12px; letter-spacing:0.08em; font-style:italic;">' + t.year + '</p>' +
-          '<h4 class="font-medium mt-1" style="color:#1a1a1a; font-size:16px;">' + t.title + '</h4>' +
+          '<h4 class="font-medium mt-1" style="color:#1a1a1a; font-size:' + (t.highlight ? '18px' : '16px') + ';">' + t.title + '</h4>' +
           '<p class="mt-1" style="color:rgb(90,80,68); font-size:13px; line-height:1.8;">' + t.desc + '</p>';
         tl.appendChild(item);
       });
 
-      // 使用ツール
-      var toolsWrap = document.getElementById('about-tools');
-      toolsWrap.innerHTML = '';
-      aboutTools.forEach(function(name) {
-        var chip = document.createElement('span');
-        chip.textContent = name;
-        chip.style.cssText = 'padding:8px 18px; border-radius:9999px; background:rgba(155,124,92,0.12); color:rgb(120,90,60); font-size:13px; font-weight:500;';
-        toolsWrap.appendChild(chip);
+      // 制作実績数
+      var statsWrap = document.getElementById('about-stats');
+      statsWrap.innerHTML = '';
+      aboutStats.forEach(function(s) {
+        var cell = document.createElement('div');
+        cell.className = 'about-stat-cell';
+        cell.innerHTML =
+          '<div class="about-stat-num"><span class="about-stat-count" data-target="' + s.num + '">0</span>' +
+          '<span class="about-stat-suffix">' + s.suffix + '</span></div>' +
+          '<div class="about-stat-label">' + s.label + '</div>';
+        statsWrap.appendChild(cell);
       });
 
       aboutBuilt = true;
+    }
+
+    // 数字をカウントアップ
+    function runStatsCount() {
+      var counters = document.querySelectorAll('.about-stat-count');
+      counters.forEach(function(el) {
+        var target = parseInt(el.dataset.target, 10);
+        if (isNaN(target)) { el.textContent = el.dataset.target; return; }
+        var dur = 1100, start = null;
+        function step(ts) {
+          if (!start) start = ts;
+          var p = Math.min((ts - start) / dur, 1);
+          var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic
+          el.textContent = Math.round(target * eased);
+          if (p < 1) requestAnimationFrame(step);
+          else el.textContent = target;
+        }
+        requestAnimationFrame(step);
+      });
+    }
+
+    // タイムライン：線が上から下へ伸び、丸が順番に出る
+    function runTimelineAnim() {
+      var line = document.querySelector('.about-timeline-line');
+      var dots = document.querySelectorAll('.about-timeline-dot');
+      if (line) { line.classList.remove('run'); void line.offsetWidth; line.classList.add('run'); }
+      dots.forEach(function(dot, i) {
+        dot.classList.remove('run');
+        void dot.offsetWidth;
+        // 線の伸び（1.2s）に合わせて丸を順番に出す
+        setTimeout(function() { dot.classList.add('run'); }, 200 + i * 350);
+      });
     }
 
     function showAbout() {
@@ -905,21 +1041,37 @@
       // セクションを時間差でフェードイン
       var sections = aboutView.querySelectorAll('.about-section');
       sections.forEach(function(sec) { sec.classList.remove('run'); });
-      // スキルバーをリセット
-      var fills = aboutView.querySelectorAll('.about-skill-bar-fill');
-      fills.forEach(function(f) { f.classList.remove('run'); f.style.width = '0'; });
+      // 実績数をリセット
+      var counts = aboutView.querySelectorAll('.about-stat-count');
+      counts.forEach(function(c) { c.textContent = '0'; });
+      // タイムラインをリセット
+      var tlLine = aboutView.querySelector('.about-timeline-line');
+      var tlDots = aboutView.querySelectorAll('.about-timeline-dot');
+      if (tlLine) tlLine.classList.remove('run');
+      tlDots.forEach(function(d) { d.classList.remove('run'); });
+      var timelineFired = false;
+
       requestAnimationFrame(function() {
         requestAnimationFrame(function() {
           sections.forEach(function(sec, i) {
             setTimeout(function() { sec.classList.add('run'); }, i * 150);
           });
-          // スキルバーを伸ばす
-          setTimeout(function() {
-            fills.forEach(function(f) {
-              f.classList.add('run');
-              f.style.width = f.dataset.level + '%';
-            });
-          }, 400);
+          // 実績数をカウントアップ（セクションが出そろう頃に）
+          setTimeout(function() { runStatsCount(); }, 600);
+          // タイムラインが画面に入ったら発火（一度だけ）
+          var tlSection = aboutView.querySelector('#about-timeline');
+          if (tlSection) {
+            var obs = new IntersectionObserver(function(entries) {
+              entries.forEach(function(e) {
+                if (e.isIntersecting && !timelineFired) {
+                  timelineFired = true;
+                  runTimelineAnim();
+                  obs.disconnect();
+                }
+              });
+            }, { threshold: 0.3 });
+            obs.observe(tlSection);
+          }
         });
       });
     }
