@@ -40,6 +40,23 @@
     .hero-rise  { opacity: 0; }
     .hero-rise.run  { animation: heroRiseUp 0.6s cubic-bezier(0.4,0,0.2,1) forwards; }
 
+    /* 肩書き：左から伸びるマーカーハイライト */
+    .marker-text {
+      position: relative;
+      display: inline;
+      background-image: linear-gradient(rgba(155,124,92,0.28), rgba(155,124,92,0.28));
+      background-repeat: no-repeat;
+      background-position: 0 60%;
+      background-size: 0% 65%;
+    }
+    .marker-text.run {
+      animation: markerGrow 0.9s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes markerGrow {
+      from { background-size: 0% 65%; }
+      to   { background-size: 100% 65%; }
+    }
+
     /* マーキーギャラリー */
     .marquee-wrap {
       overflow: hidden;
@@ -51,7 +68,7 @@
       display: flex;
       gap: 1.5rem;
       width: max-content;
-      animation: marqueeScroll 90s linear infinite;
+      animation: marqueeScroll 60s linear infinite;
     }
     .marquee-track:hover { animation-play-state: paused; }
     @keyframes marqueeScroll {
@@ -201,7 +218,7 @@
         <img loading="lazy" class="w-36 h-36 rounded-full object-cover shadow-lg flex-shrink-0" src="images/profile.jpg" alt="Portrait">
         <div>
           <h1 id="hero-name" class="heading-font hero-slide" style="color: rgb(26, 26, 26); font-weight: 700; font-size: 32px;">hayato</h1>
-          <p id="hero-tagline" class="mt-2 hero-slide" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;">Physical Therapist &amp; Designer</p>
+          <p id="hero-tagline" class="mt-2" style="color: rgb(107, 92, 76); font-weight: 500; font-size: 18px;"><span class="marker-text">Physical Therapist &amp; Designer</span></p>
           <p id="hero-desc" class="mt-4 leading-relaxed hero-rise" style="color: rgb(74, 74, 74); font-weight: 400; font-size: 15px;">チラシ・図解・スライド・SNS画像まで、Canvaを活用して幅広く制作しています。<br>医療や健康の専門知識を活かし、"伝わる"デザインで想いをカタチにします。</p>
         </div>
       </div>
@@ -791,14 +808,14 @@
     // ===== 初回読み込み時のローディング =====
     function startHeroAnimation() {
       var name = document.getElementById('hero-name');
-      var tagline = document.getElementById('hero-tagline');
+      var marker = document.querySelector('#hero-tagline .marker-text');
       var desc = document.getElementById('hero-desc');
       // 名前：左からスライドイン
       name.classList.add('run');
-      // 肩書き：少し遅れて左からスライドイン
-      setTimeout(function() { tagline.classList.add('run'); }, 200);
-      // 紹介文：肩書きのアニメが終わった後、下からニョキッ
-      setTimeout(function() { desc.classList.add('run'); }, 900);
+      // 肩書き：少し遅れてマーカーが左から伸びる
+      setTimeout(function() { if (marker) marker.classList.add('run'); }, 400);
+      // 紹介文：マーカーが終わった後、下からニョキッ
+      setTimeout(function() { desc.classList.add('run'); }, 1300);
     }
 
     window.addEventListener('load', function() {
