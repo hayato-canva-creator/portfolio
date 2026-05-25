@@ -8,6 +8,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
   <style>
+    html, body { overflow-x: hidden; max-width: 100%; }
     body { font-family: 'DM Sans', sans-serif; }
     .heading-font { font-family: 'Playfair Display', serif; }
     .project-card:hover img { transform: scale(1.05); }
@@ -309,7 +310,9 @@
     #about-bgtext {
       position: fixed;
       top: 50%; right: -2%;
-      transform: translateY(-50%);
+      --bg-base: -50%;
+      --bg-shift: 0px;
+      transform: translateY(calc(var(--bg-base) + var(--bg-shift)));
       font-family: 'Playfair Display', serif;
       font-weight: 700;
       font-size: 22vw;
@@ -361,9 +364,13 @@
         padding: 24px 24px 60px 24px;
       }
       #about-bgtext {
-        top: auto; bottom: 8%;
-        right: -5%;
-        font-size: 38vw;
+        top: auto; bottom: 12%;
+        right: 50%;
+        transform: translateX(50%) translateY(var(--bg-shift));
+        --bg-base: 0px;
+        --bg-shift: 0px;
+        font-size: 19vw;
+        letter-spacing: -0.04em;
       }
     }
     /* できること：アイコン＋ラベルのグリッド */
@@ -1122,7 +1129,7 @@
       var photoImg = document.querySelector('#about-photo img');
       var bgText = document.getElementById('about-bgtext');
       if (photoImg) photoImg.style.transform = 'translateY(' + (y * 0.05) + 'px) scale(1.08)';
-      if (bgText) bgText.style.transform = 'translateY(calc(-50% + ' + (y * -0.04) + 'px))';
+      if (bgText) bgText.style.setProperty('--bg-shift', (y * -0.04) + 'px');
     }
 
     function showAbout() {
@@ -1135,7 +1142,7 @@
       var photoImg0 = document.querySelector('#about-photo img');
       var bgText0 = document.getElementById('about-bgtext');
       if (photoImg0) photoImg0.style.transform = 'translateY(0) scale(1.08)';
-      if (bgText0) bgText0.style.transform = 'translateY(-50%)';
+      if (bgText0) bgText0.style.setProperty('--bg-shift', '0px');
       // セクションを時間差でフェードイン
       var sections = aboutView.querySelectorAll('.about-section');
       sections.forEach(function(sec) { sec.classList.remove('run'); });
